@@ -2,5 +2,7 @@ module Lib
     ( someFunc
     ) where
 
+import MDictionary
+
 someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+someFunc = print =<< getDataByLang 3

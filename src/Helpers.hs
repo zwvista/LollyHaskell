@@ -6,11 +6,10 @@ module Helpers
     , urlLolly
     ) where
 
--- Data.Aeson.Casing
-
 import Data.Aeson.Types
 import Network.HTTP.Req
 
+-- Data.Aeson.Casing
 aesonDrop :: Int -> (String -> String) -> Options
 aesonDrop n f = defaultOptions
         { fieldLabelModifier = f . drop n }

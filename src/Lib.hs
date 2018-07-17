@@ -5,4 +5,4 @@ module Lib
 import MDictionary
 
 someFunc :: IO ()
-someFunc = print =<< getDataByLang 3
+someFunc = print =<< getDictsOnlineByLang 3

@@ -8,12 +8,13 @@ module MDictionary
     , MDictsOnline
     , MDictsOffline
     , MDictsNote
-    , getDataByLang
+    , getDictsOnlineByLang
+    , getDictsOfflineByLang
+    , getDictsNoteByLang
     ) where
 
 import Data.Aeson
 import Data.Text (Text)
-import qualified Data.Text as T
 import GHC.Generics
 import Network.HTTP.Req
 import Data.Default.Class
@@ -54,9 +55,23 @@ instance FromJSON MDictsOffline where
 instance FromJSON MDictsNote where
     parseJSON = genericParseJSON customOptionsLolly
 
-getDataByLang :: Int -> IO [MDictOnline]
-getDataByLang langid = runReq def $ do
+getDictsOnlineByLang :: Int -> IO [MDictOnline]
+getDictsOnlineByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSONLINE") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGIDFROM,eq," ++ show langid)
     return $ fVDICTSONLINE (responseBody v :: MDictsOnline)
+
+getDictsOfflineByLang :: Int -> IO [MDictOffline]
+getDictsOfflineByLang langid = runReq def $ do
+    v <- req GET (urlLolly /: "VDICTSOFFLINE") NoReqBody jsonResponse $
+        "transform" =: (1 :: Int) <>
+        "filter" =: ("LANGIDFROM,eq," ++ show langid)
+    return $ fVDICTSOFFLINE (responseBody v :: MDictsOffline)
+
+getDictsNoteByLang :: Int -> IO [MDictNote]
+getDictsNoteByLang langid = runReq def $ do
+    v <- req GET (urlLolly /: "VDICTSNOTE") NoReqBody jsonResponse $
+        "transform" =: (1 :: Int) <>
+        "filter" =: ("LANGIDFROM,eq," ++ show langid)
+    return $ fVDICTSNOTE (responseBody v :: MDictsNote)

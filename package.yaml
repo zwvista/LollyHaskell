@@ -20,11 +20,11 @@ extra-source-files:
 description:         Please see the README on GitHub at <https://github.com/githubuser/LollyHaskell#readme>
 
 dependencies:
-- base >= 4.7 && < 5
 - aeson
-- text
-- req
+- base >= 4.7 && < 5
 - data-default-class
+- req
+- text
 
 library:
   source-dirs: src

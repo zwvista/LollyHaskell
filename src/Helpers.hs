@@ -4,6 +4,7 @@
 module Helpers
     ( customOptionsLolly
     , urlLolly
+    , aesonDrop
     ) where
 
 import Data.Aeson.Types

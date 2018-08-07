@@ -4,12 +4,10 @@ module Lib
 
 import Models.MDictionary
 import Models.MLangPhrase
-import Models.MLanguage
+import Models.MLanguage as MLanguage
 import Models.MTextbook
 import Text.Show.Unicode
 
 someFunc :: IO ()
 someFunc = do
-    -- mapM_ uprint =<< getDictsOnlineByLang 3
-    mapM_ uprint =<< getLanguages
-    -- mapM_ uprint =<< getTextbooksByLang 3
+    mapM_ uprint =<< MLanguage.getData

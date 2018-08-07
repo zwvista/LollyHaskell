@@ -9,7 +9,7 @@ module Models.MTextbook
     , fTEXTBOOKNAME
     , fUNITS
     , fPARTS
-    , getTextbooksByLang
+    , getDataByLang
     ) where
 
 import Control.Lens
@@ -44,8 +44,8 @@ instance FromJSON MTextbook where
 instance FromJSON MTextbooks where
     parseJSON = genericParseJSON customOptions
 
-getTextbooksByLang :: Int -> IO [MTextbook]
-getTextbooksByLang langid = runReq def $ do
+getDataByLang :: Int -> IO [MTextbook]
+getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "TEXTBOOKS") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGID,eq," ++ show langid)

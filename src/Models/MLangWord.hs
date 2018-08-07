@@ -8,9 +8,10 @@ module Models.MLangWord
     , fLANGID
     , fWORD
     , fTRANSLATION
-    , getLangWordsByLang
-    , updateLangWord
-    , deleteLangWord
+    , getDataByLang
+    , update
+    , create
+    , delete
     ) where
 
 import Control.Lens
@@ -40,24 +41,24 @@ instance FromJSON MLangWord where
 instance FromJSON MLangWords where
     parseJSON = genericParseJSON customOptionsLolly
 
-getLangWordsByLang :: Int -> IO [MLangWord]
-getLangWordsByLang langid = runReq def $ do
+getDataByLang :: Int -> IO [MLangWord]
+getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "LANGWORDS") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGID,eq," ++ show langid)
     return $ _fLANGWORDS (responseBody v :: MLangWords)
 
-updateLangWord :: Int -> MLangWord -> IO (Maybe String)
-updateLangWord id item = runReq def $ do
+update :: Int -> MLangWord -> IO (Maybe String)
+update id item = runReq def $ do
     v <- req PUT (urlLolly /: "LANGWORDS" /~ id) (ReqBodyJson item) jsonResponse mempty
     return (responseBody v :: Maybe String)
 
-createLangWord :: MLangWord -> IO (Maybe String)
-createLangWord item = runReq def $ do
+create :: MLangWord -> IO (Maybe String)
+create item = runReq def $ do
     v <- req POST (urlLolly /: "LANGWORDS") (ReqBodyJson item) jsonResponse mempty
     return (responseBody v :: Maybe String)
 
-deleteLangWord :: Int -> IO (Maybe String)
-deleteLangWord id = runReq def $ do
+delete :: Int -> IO (Maybe String)
+delete id = runReq def $ do
     v <- req DELETE (urlLolly /: "LANGWORDS" /~ id) NoReqBody jsonResponse mempty
     return (responseBody v :: Maybe String)

@@ -12,15 +12,15 @@ module Models.MUserSetting
     , fVALUE2
     , fVALUE3
     , fVALUE4
-    , getUserSettingsByUser
-    , updateUserSettingLang
-    , updateUserSettingTextbook
-    , updateUserSettingDictOnline
-    , updateUserSettingDictNote
-    , updateUserSettingUnitFrom
-    , updateUserSettingPartFrom
-    , updateUserSettingUnitTo
-    , updateUserSettingPartTo
+    , getDataByUser
+    , updateLang
+    , updateTextbook
+    , updateDictOnline
+    , updateDictNote
+    , updateUnitFrom
+    , updatePartFrom
+    , updateUnitTo
+    , updatePartTo
     ) where
 
 import Control.Lens
@@ -56,38 +56,38 @@ instance FromJSON MUserSetting where
 instance FromJSON MUserSettings where
     parseJSON = genericParseJSON customOptionsLolly
 
-getUserSettingsByUser :: Int -> IO [MUserSetting]
-getUserSettingsByUser userid = runReq def $ do
+getDataByUser :: Int -> IO [MUserSetting]
+getDataByUser userid = runReq def $ do
     v <- req GET (urlLolly /: "USERSETTINGS") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: (printf "USERID,eq,%d" userid :: String)
     return $ _fUSERSETTINGS (responseBody v :: MUserSettings)
 
-updateUserSetting :: Int -> String -> IO (Maybe String)
-updateUserSetting id str = runReq def $ do
+update :: Int -> String -> IO (Maybe String)
+update id str = runReq def $ do
     v <- req PUT (urlLolly /: "USERSETTINGS" /~ id) (ReqBodyLbs (B.fromString str)) jsonResponse mempty
     return (responseBody v :: Maybe String)
 
-updateUserSettingLang :: Int -> Int -> IO (Maybe String)
-updateUserSettingLang id langid = updateUserSetting id ("VALUE1=" ++ show langid)
+updateLang :: Int -> Int -> IO (Maybe String)
+updateLang id langid = update id ("VALUE1=" ++ show langid)
 
-updateUserSettingTextbook :: Int -> Int -> IO (Maybe String)
-updateUserSettingTextbook id textbookid = updateUserSetting id ("VALUE1=" ++ show textbookid)
+updateTextbook :: Int -> Int -> IO (Maybe String)
+updateTextbook id textbookid = update id ("VALUE1=" ++ show textbookid)
 
-updateUserSettingDictOnline :: Int -> Int -> IO (Maybe String)
-updateUserSettingDictOnline id dictonlineid = updateUserSetting id ("VALUE2=" ++ show dictonlineid)
+updateDictOnline :: Int -> Int -> IO (Maybe String)
+updateDictOnline id dictonlineid = update id ("VALUE2=" ++ show dictonlineid)
 
-updateUserSettingDictNote :: Int -> Int -> IO (Maybe String)
-updateUserSettingDictNote id dictnoteid = updateUserSetting id ("VALUE3=" ++ show dictnoteid)
+updateDictNote :: Int -> Int -> IO (Maybe String)
+updateDictNote id dictnoteid = update id ("VALUE3=" ++ show dictnoteid)
 
-updateUserSettingUnitFrom :: Int -> Int -> IO (Maybe String)
-updateUserSettingUnitFrom id usunitfrom = updateUserSetting id ("VALUE1=" ++ show usunitfrom)
+updateUnitFrom :: Int -> Int -> IO (Maybe String)
+updateUnitFrom id usunitfrom = update id ("VALUE1=" ++ show usunitfrom)
 
-updateUserSettingPartFrom :: Int -> Int -> IO (Maybe String)
-updateUserSettingPartFrom id uspartfrom = updateUserSetting id ("VALUE2=" ++ show uspartfrom)
+updatePartFrom :: Int -> Int -> IO (Maybe String)
+updatePartFrom id uspartfrom = update id ("VALUE2=" ++ show uspartfrom)
 
-updateUserSettingUnitTo :: Int -> Int -> IO (Maybe String)
-updateUserSettingUnitTo id usunitto = updateUserSetting id ("VALUE3=" ++ show usunitto)
+updateUnitTo :: Int -> Int -> IO (Maybe String)
+updateUnitTo id usunitto = update id ("VALUE3=" ++ show usunitto)
 
-updateUserSettingPartTo :: Int -> Int -> IO (Maybe String)
-updateUserSettingPartTo id uspartto = updateUserSetting id ("VALUE4=" ++ show uspartto)
+updatePartTo :: Int -> Int -> IO (Maybe String)
+updatePartTo id uspartto = update id ("VALUE4=" ++ show uspartto)

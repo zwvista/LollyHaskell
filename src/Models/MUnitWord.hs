@@ -12,10 +12,10 @@ module Models.MUnitWord
     , fSEQNUM
     , fWORD
     , fNOTE
-    , getUnitWordsByTextbook
-    , updateUnitWord
-    , createUnitWord
-    , deleteUnitWord
+    , getDataByTextbookUnitPart
+    , update
+    , create
+    , delete
     ) where
 
 import Control.Lens
@@ -56,8 +56,8 @@ instance FromJSON MUnitWord where
 instance FromJSON MUnitWords where
     parseJSON = genericParseJSON customOptionsLolly
 
-getUnitWordsByTextbook :: Int -> Int -> Int -> IO [MUnitWord]
-getUnitWordsByTextbook textbookid unitPartFrom unitPartTo = runReq def $ do
+getDataByTextbookUnitPart :: Int -> Int -> Int -> IO [MUnitWord]
+getDataByTextbookUnitPart textbookid unitPartFrom unitPartTo = runReq def $ do
     v <- req GET (urlLolly /: "VUNITWORDS") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter[]" =: (printf "TEXTBOOKID,eq,%d" textbookid :: String) <>
@@ -66,17 +66,17 @@ getUnitWordsByTextbook textbookid unitPartFrom unitPartTo = runReq def $ do
         "order[]" =: ("SEQNUM" :: String)
     return $ _fVUNITWORDS (responseBody v :: MUnitWords)
 
-updateUnitWord :: Int -> MUnitWord -> IO (Maybe String)
-updateUnitWord id item = runReq def $ do
+update :: Int -> MUnitWord -> IO (Maybe String)
+update id item = runReq def $ do
     v <- req PUT (urlLolly /: "UNITWORDS" /~ id) (ReqBodyJson item) jsonResponse mempty
     return (responseBody v :: Maybe String)
 
-createUnitWord :: MUnitWord -> IO (Maybe String)
-createUnitWord item = runReq def $ do
+create :: MUnitWord -> IO (Maybe String)
+create item = runReq def $ do
     v <- req POST (urlLolly /: "UNITWORDS") (ReqBodyJson item) jsonResponse mempty
     return (responseBody v :: Maybe String)
 
-deleteUnitWord :: Int -> IO (Maybe String)
-deleteUnitWord id = runReq def $ do
+delete :: Int -> IO (Maybe String)
+delete id = runReq def $ do
     v <- req DELETE (urlLolly /: "UNITWORDS" /~ id) NoReqBody jsonResponse mempty
     return (responseBody v :: Maybe String)

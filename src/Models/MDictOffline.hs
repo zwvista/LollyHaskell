@@ -13,7 +13,7 @@ module Models.MDictOffline
     , fTRANSFORM_MAC
     , fWAIT
     , fTEMPLATE
-    , getDictsOfflineByLang
+    , getDataByLang
     ) where
 
 import Control.Lens
@@ -31,8 +31,8 @@ data MDictsOffline = MDictsOffline { _fVDICTSOFFLINE :: [MDictOffline] } derivin
 instance FromJSON MDictsOffline where
     parseJSON = genericParseJSON customOptionsLolly
 
-getDictsOfflineByLang :: Int -> IO [MDictOffline]
-getDictsOfflineByLang langid = runReq def $ do
+getDataByLang :: Int -> IO [MDictOffline]
+getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSOFFLINE") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGIDFROM,eq," ++ show langid)

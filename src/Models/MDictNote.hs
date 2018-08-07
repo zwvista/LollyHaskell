@@ -13,7 +13,7 @@ module Models.MDictNote
     , fTRANSFORM_MAC
     , fWAIT
     , fTEMPLATE
-    , getDictsNoteByLang
+    , getDataByLang
     ) where
 
 import Control.Lens
@@ -31,8 +31,8 @@ data MDictsNote = MDictsNote { _fVDICTSNOTE :: [MDictNote] } deriving (Show, Gen
 instance FromJSON MDictsNote where
     parseJSON = genericParseJSON customOptionsLolly
 
-getDictsNoteByLang :: Int -> IO [MDictNote]
-getDictsNoteByLang langid = runReq def $ do
+getDataByLang :: Int -> IO [MDictNote]
+getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSNOTE") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGIDFROM,eq," ++ show langid)

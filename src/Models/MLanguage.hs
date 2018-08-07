@@ -6,7 +6,7 @@ module Models.MLanguage
     ( MLanguage
     , fID
     , fLANGNAME
-    , getLanguages
+    , getData
     ) where
 
 import Control.Lens
@@ -38,8 +38,8 @@ instance FromJSON MLanguage where
 instance FromJSON MLanguages where
     parseJSON = genericParseJSON customOptions
 
-getLanguages :: IO [MLanguage]
-getLanguages = runReq def $ do
+getData :: IO [MLanguage]
+getData = runReq def $ do
     v <- req GET (urlLolly /: "LANGUAGES") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("ID,neq,0" :: String)

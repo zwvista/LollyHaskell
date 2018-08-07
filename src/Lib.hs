@@ -2,10 +2,10 @@ module Lib
     ( someFunc
     ) where
 
-import MDictionary
-import MLangPhrase
-import MLanguage
-import MTextbook
+import Models.MDictionary
+import Models.MLangPhrase
+import Models.MLanguage
+import Models.MTextbook
 import Text.Show.Unicode
 
 someFunc :: IO ()

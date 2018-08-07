@@ -2,7 +2,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module MUserSetting
+module Models.MUserSetting
     ( MUserSetting
     , fID
     , fUSERID

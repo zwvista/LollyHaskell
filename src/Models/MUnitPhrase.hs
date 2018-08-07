@@ -2,7 +2,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module MUnitPhrase
+module Models.MUnitPhrase
     ( MUnitPhrase
     , fID
     , fLANGID

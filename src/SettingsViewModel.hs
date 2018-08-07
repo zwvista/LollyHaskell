@@ -12,10 +12,11 @@ import Control.Arrow
 import Data.Text (Text)
 import Data.Text.Read
 import Formatting
-import MDictionary
-import MLanguage
-import MTextbook
-import MUserSetting
+import Models.MDictOnline
+import Models.MDictNote
+import Models.MLanguage
+import Models.MTextbook
+import Models.MUserSetting
 
 data SettingsViewModel = SettingsViewModel
     { _arrUserSettings :: [MUserSetting]

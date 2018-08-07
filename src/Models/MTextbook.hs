@@ -2,7 +2,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module MTextbook
+module Models.MTextbook
     ( MTextbook
     , fID
     , fLANGID

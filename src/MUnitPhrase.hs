@@ -1,35 +1,45 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module MUnitPhrase
     ( MUnitPhrase
-    , MUnitPhrases
+    , fID
+    , fLANGID
+    , fTEXTBOOKID
+    , fUNIT
+    , fPART
+    , fSEQNUM
+    , fPHRASE
+    , fTRANSLATION
     , getUnitPhrasesByTextbook
     , updateUnitPhrase
     , createUnitPhrase
     , deleteUnitPhrase
     ) where
 
+import Control.Lens
 import Data.Aeson
+import Data.Default.Class
 import Data.Text (Text)
 import GHC.Generics
-import Network.HTTP.Req
-import Data.Default.Class
-import Text.Printf
 import Helpers
+import Network.HTTP.Req
+import Text.Printf
 
 data MUnitPhrase = MUnitPhrase
-    { fID :: Int
-    , fLANGID :: Int
-    , fTEXTBOOKID :: Int
-    , fUNIT :: Int
-    , fPART :: Int
-    , fSEQNUM :: Int
-    , fPHRASE :: Text
-    , fTRANSLATION :: Maybe Text
+    { _fID :: Int
+    , _fLANGID :: Int
+    , _fTEXTBOOKID :: Int
+    , _fUNIT :: Int
+    , _fPART :: Int
+    , _fSEQNUM :: Int
+    , _fPHRASE :: Text
+    , _fTRANSLATION :: Maybe Text
     } deriving (Show, Generic)
+makeLenses ''MUnitPhrase
 
-data MUnitPhrases = MUnitPhrases { fVUNITPHRASES :: [MUnitPhrase] } deriving (Show, Generic)
+data MUnitPhrases = MUnitPhrases { _fVUNITPHRASES :: [MUnitPhrase] } deriving (Show, Generic)
 
 instance ToJSON MUnitPhrase where
     toJSON = genericToJSON customOptionsLolly
@@ -48,7 +58,7 @@ getUnitPhrasesByTextbook textbookid unitPartFrom unitPartTo = runReq def $ do
         "filter[]" =: (printf "UNITPART,bt,%d,%d" unitPartFrom unitPartTo :: String) <>
         "order[]" =: ("UNITPART" :: String) <>
         "order[]" =: ("SEQNUM" :: String)
-    return $ fVUNITPHRASES (responseBody v :: MUnitPhrases)
+    return $ _fVUNITPHRASES (responseBody v :: MUnitPhrases)
 
 updateUnitPhrase :: Int -> MUnitPhrase -> IO (Maybe String)
 updateUnitPhrase id item = runReq def $ do

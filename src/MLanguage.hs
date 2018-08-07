@@ -1,27 +1,31 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module MLanguage
     ( MLanguage
-    , MLanguages
+    , fID
+    , fLANGNAME
     , getLanguages
     ) where
 
+import Control.Lens
 import Data.Aeson
+import Data.Default.Class
 import Data.Text (Text)
 import GHC.Generics
-import Network.HTTP.Req
-import Data.Default.Class
 import Helpers
+import Network.HTTP.Req
 
 data MLanguage = MLanguage
-    { fID :: Int
-    , fLANGNAME :: Text
+    { _fID :: Int
+    , _fLANGNAME :: Text
     } deriving (Show, Generic)
+makeLenses ''MLanguage
 
-data MLanguages = MLanguages { fLANGUAGES :: [MLanguage] } deriving (Show, Generic)
+data MLanguages = MLanguages { _fLANGUAGES :: [MLanguage] } deriving (Show, Generic)
 
-customOptions = aesonDrop 1 match where
+customOptions = aesonDrop 2 match where
     match "LANGNAME" = "NAME"
     match n = n
 
@@ -39,4 +43,4 @@ getLanguages = runReq def $ do
     v <- req GET (urlLolly /: "LANGUAGES") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("ID,neq,0" :: String)
-    return $ fLANGUAGES (responseBody v :: MLanguages)
+    return $ _fLANGUAGES (responseBody v :: MLanguages)

@@ -1,41 +1,51 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module MUnitWord
     ( MUnitWord
-    , MUnitWords
+    , fID
+    , fLANGID
+    , fTEXTBOOKID
+    , fUNIT
+    , fPART
+    , fSEQNUM
+    , fWORD
+    , fNOTE
     , getUnitWordsByTextbook
     , updateUnitWord
     , createUnitWord
     , deleteUnitWord
     ) where
 
+import Control.Lens
 import Data.Aeson
+import Data.Default.Class
 import Data.Text (Text)
 import GHC.Generics
-import Network.HTTP.Req
-import Data.Default.Class
-import Text.Printf
 import Helpers
+import Network.HTTP.Req
+import Text.Printf
 
 data MUnitWord = MUnitWord
-    { fID :: Int
-    , fLANGID :: Int
-    , fTEXTBOOKID :: Int
-    , fUNIT :: Int
-    , fPART :: Int
-    , fSEQNUM :: Int
-    , fWORD :: Text
-    , fNOTE :: Maybe Text
+    { _fID :: Int
+    , _fLANGID :: Int
+    , _fTEXTBOOKID :: Int
+    , _fUNIT :: Int
+    , _fPART :: Int
+    , _fSEQNUM :: Int
+    , _fWORD :: Text
+    , _fNOTE :: Maybe Text
     } deriving (Show, Generic)
+makeLenses ''MUnitWord
 
 fWORDNOTE :: MUnitWord -> Text
-fWORDNOTE w = fWORD w <> match (fNOTE w) where
+fWORDNOTE w = w^.fWORD <> match (w^.fNOTE) where
     match Nothing = ""
     match (Just "") = ""
     match (Just a) = "(" <> a <> ")"
 
-data MUnitWords = MUnitWords { fVUNITWORDS :: [MUnitWord] } deriving (Show, Generic)
+data MUnitWords = MUnitWords { _fVUNITWORDS :: [MUnitWord] } deriving (Show, Generic)
 
 instance ToJSON MUnitWord where
     toJSON = genericToJSON customOptionsLolly
@@ -54,7 +64,7 @@ getUnitWordsByTextbook textbookid unitPartFrom unitPartTo = runReq def $ do
         "filter[]" =: (printf "UNITPART,bt,%d,%d" unitPartFrom unitPartTo :: String) <>
         "order[]" =: ("UNITPART" :: String) <>
         "order[]" =: ("SEQNUM" :: String)
-    return $ fVUNITWORDS (responseBody v :: MUnitWords)
+    return $ _fVUNITWORDS (responseBody v :: MUnitWords)
 
 updateUnitWord :: Int -> MUnitWord -> IO (Maybe String)
 updateUnitWord id item = runReq def $ do

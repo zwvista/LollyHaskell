@@ -1,30 +1,37 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module MTextbook
     ( MTextbook
-    , MTextbooks
-    , getTextbooks
+    , fID
+    , fLANGID
+    , fTEXTBOOKNAME
+    , fUNITS
+    , fPARTS
+    , getTextbooksByLang
     ) where
 
+import Control.Lens
 import Data.Aeson
+import Data.Default.Class
 import Data.Text (Text)
 import GHC.Generics
-import Network.HTTP.Req
-import Data.Default.Class
 import Helpers
+import Network.HTTP.Req
 
 data MTextbook = MTextbook
-    { fID :: Int
-    , fLANGID :: Int
-    , fTEXTBOOKNAME :: Text
-    , fUNITS :: Int
-    , fPARTS :: Text
+    { _fID :: Int
+    , _fLANGID :: Int
+    , _fTEXTBOOKNAME :: Text
+    , _fUNITS :: Int
+    , _fPARTS :: Text
     } deriving (Show, Generic)
+makeLenses ''MTextbook
 
-data MTextbooks = MTextbooks { fTEXTBOOKS :: [MTextbook] } deriving (Show, Generic)
+data MTextbooks = MTextbooks { _fTEXTBOOKS :: [MTextbook] } deriving (Show, Generic)
 
-customOptions = aesonDrop 1 match where
+customOptions = aesonDrop 2 match where
     match "TEXTBOOKNAME" = "NAME"
     match n = n
 
@@ -37,9 +44,9 @@ instance FromJSON MTextbook where
 instance FromJSON MTextbooks where
     parseJSON = genericParseJSON customOptions
 
-getTextbooks :: Int -> IO [MTextbook]
-getTextbooks langid = runReq def $ do
+getTextbooksByLang :: Int -> IO [MTextbook]
+getTextbooksByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "TEXTBOOKS") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGID,eq," ++ show langid)
-    return $ fTEXTBOOKS (responseBody v :: MTextbooks)
+    return $ _fTEXTBOOKS (responseBody v :: MTextbooks)

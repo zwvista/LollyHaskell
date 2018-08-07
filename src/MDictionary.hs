@@ -1,44 +1,53 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module MDictionary
     ( MDictOnline
     , MDictOffline
     , MDictNote
-    , MDictsOnline
-    , MDictsOffline
-    , MDictsNote
+    , fID
+    , fLANGIDFROM
+    , fDICTTYPENAME
+    , fDICTNAME
+    , fURL
+    , fCHCONV
+    , fTRANSFORM_MAC
+    , fWAIT
+    , fTEMPLATE
     , getDictsOnlineByLang
     , getDictsOfflineByLang
     , getDictsNoteByLang
     ) where
 
+import Control.Lens
 import Data.Aeson
+import Data.Default.Class
 import Data.Text (Text)
 import GHC.Generics
-import Network.HTTP.Req
-import Data.Default.Class
 import Helpers
+import Network.HTTP.Req
 
 data MDictionary = MDictionary
-    { fID :: Int
-    , fLANGIDFROM :: Int
-    , fDICTTYPENAME :: Text
-    , fDICTNAME :: Text
-    , fURL :: Maybe Text
-    , fCHCONV :: Maybe Text
-    , fTRANSFORM_MAC :: Maybe Text
-    , fWAIT :: Maybe Int
-    , fTEMPLATE :: Maybe Text
+    { _fID :: Int
+    , _fLANGIDFROM :: Int
+    , _fDICTTYPENAME :: Text
+    , _fDICTNAME :: Text
+    , _fURL :: Maybe Text
+    , _fCHCONV :: Maybe Text
+    , _fTRANSFORM_MAC :: Maybe Text
+    , _fWAIT :: Maybe Int
+    , _fTEMPLATE :: Maybe Text
     } deriving (Show, Generic)
+makeLenses ''MDictionary
 
 type MDictOnline = MDictionary
 type MDictOffline = MDictionary
 type MDictNote = MDictionary
 
-data MDictsOnline = MDictsOnline { fVDICTSONLINE :: [MDictOnline] } deriving (Show, Generic)
-data MDictsOffline = MDictsOffline { fVDICTSOFFLINE :: [MDictOffline] } deriving (Show, Generic)
-data MDictsNote = MDictsNote { fVDICTSNOTE :: [MDictNote] } deriving (Show, Generic)
+data MDictsOnline = MDictsOnline { _fVDICTSONLINE :: [MDictOnline] } deriving (Show, Generic)
+data MDictsOffline = MDictsOffline { _fVDICTSOFFLINE :: [MDictOffline] } deriving (Show, Generic)
+data MDictsNote = MDictsNote { _fVDICTSNOTE :: [MDictNote] } deriving (Show, Generic)
 
 instance ToJSON MDictionary where
     toJSON = genericToJSON customOptionsLolly
@@ -60,18 +69,18 @@ getDictsOnlineByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSONLINE") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGIDFROM,eq," ++ show langid)
-    return $ fVDICTSONLINE (responseBody v :: MDictsOnline)
+    return $ _fVDICTSONLINE (responseBody v :: MDictsOnline)
 
 getDictsOfflineByLang :: Int -> IO [MDictOffline]
 getDictsOfflineByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSOFFLINE") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGIDFROM,eq," ++ show langid)
-    return $ fVDICTSOFFLINE (responseBody v :: MDictsOffline)
+    return $ _fVDICTSOFFLINE (responseBody v :: MDictsOffline)
 
 getDictsNoteByLang :: Int -> IO [MDictNote]
 getDictsNoteByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSNOTE") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGIDFROM,eq," ++ show langid)
-    return $ fVDICTSNOTE (responseBody v :: MDictsNote)
+    return $ _fVDICTSNOTE (responseBody v)

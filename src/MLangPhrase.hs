@@ -1,14 +1,19 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module MLangPhrase
     ( MLangPhrase
-    , MLangPhrases
+    , fID
+    , fLANGID
+    , fPHRASE
+    , fTRANSLATION
     , getLangPhrasesByLang
     , updateLangPhrase
     , deleteLangPhrase
     ) where
 
+import Control.Lens
 import Data.Aeson
 import Data.Default.Class
 import Data.Text (Text)
@@ -17,13 +22,14 @@ import Helpers
 import Network.HTTP.Req
 
 data MLangPhrase = MLangPhrase
-    { fID :: Int
-    , fLANGID :: Int
-    , fPHRASE :: Text
-    , fTRANSLATION :: Text
+    { _fID :: Int
+    , _fLANGID :: Int
+    , _fPHRASE :: Text
+    , _fTRANSLATION :: Text
     } deriving (Show, Generic)
+makeLenses ''MLangPhrase
 
-data MLangPhrases = MLangPhrases { fLANGPHRASES :: [MLangPhrase] } deriving (Show, Generic)
+data MLangPhrases = MLangPhrases { _fLANGPHRASES :: [MLangPhrase] } deriving (Show, Generic)
 
 instance ToJSON MLangPhrase where
     toJSON = genericToJSON customOptionsLolly
@@ -39,7 +45,7 @@ getLangPhrasesByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "LANGPHRASES") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGID,eq," ++ show langid)
-    return $ fLANGPHRASES (responseBody v :: MLangPhrases)
+    return $ _fLANGPHRASES (responseBody v :: MLangPhrases)
 
 updateLangPhrase :: Int -> MLangPhrase -> IO (Maybe String)
 updateLangPhrase id item = runReq def $ do

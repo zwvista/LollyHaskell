@@ -25,6 +25,10 @@ dependencies:
 - data-default-class
 - req
 - text
+- utf8-string
+- unicode-show
+- lens
+- formatting
 
 library:
   source-dirs: src

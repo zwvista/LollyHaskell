@@ -16,7 +16,7 @@ aesonDrop n f = defaultOptions
         { fieldLabelModifier = f . drop n }
 
 customOptionsLolly :: Options
-customOptionsLolly = aesonDrop 1 id
+customOptionsLolly = aesonDrop 2 id
 
 urlLolly :: Url 'Https
 urlLolly = https "zwvista.tk" /: "lolly" /: "api.php"

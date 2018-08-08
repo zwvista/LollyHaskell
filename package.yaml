@@ -29,6 +29,7 @@ dependencies:
 - unicode-show
 - lens
 - formatting
+- async
 
 library:
   source-dirs: src

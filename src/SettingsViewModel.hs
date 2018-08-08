@@ -1,17 +1,22 @@
+{-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module SettingsViewModel
     (
     ) where
 
+import Control.Concurrent.Async
 import Control.Lens
 import Control.Monad
 import Control.Arrow
+import Data.Default.Class
 import Data.Text (Text)
 import Data.Text.Read
 import Formatting
+import GHC.Generics
 import Models.MDictOnline
 import Models.MDictNote
 import Models.MLanguage
@@ -31,53 +36,53 @@ data SettingsViewModel = SettingsViewModel
     , _selectedDictNoteIndex :: Int
     , _arrTextbooks :: [MTextbook]
     , _selectedTextbookIndex :: Int
-    }
+    } deriving (Show, Generic, Default)
 makeLenses ''SettingsViewModel
 
-getUSXXID :: SettingsViewModel -> Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> Maybe Int
-getUSXXID vm fIndex fValue = vm ^. arrUserSettings ^? ix (vm ^. fIndex) >>= (^. fValue) >>= (decimal >>> (^? _Right)) <&> fst
-setUSXXID :: SettingsViewModel -> Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> Int -> SettingsViewModel
-setUSXXID vm fIndex fValue id = vm & arrUserSettings . ix (vm ^. fIndex) . fValue . _Just .~ (sformat int id)
+getUSXXID :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> SettingsViewModel -> Maybe Int
+getUSXXID fIndex fValue vm = vm ^. arrUserSettings ^? ix (vm ^. fIndex) >>= (^. fValue) >>= (decimal >>> (^? _Right)) <&> fst
+setUSXXID :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> Int -> SettingsViewModel -> SettingsViewModel
+setUSXXID fIndex fValue id vm = vm & arrUserSettings . ix (vm ^. fIndex) . fValue . _Just .~ (sformat int id)
 
 getUSLANGID :: SettingsViewModel -> Maybe Int
-getUSLANGID vm = getUSXXID vm selectedUSUserIndex fVALUE1
-setUSLANGID :: SettingsViewModel -> Int -> SettingsViewModel
-setUSLANGID vm id = setUSXXID vm selectedUSUserIndex fVALUE1 id
+getUSLANGID = getUSXXID selectedUSUserIndex fVALUE1
+setUSLANGID :: Int -> SettingsViewModel -> SettingsViewModel
+setUSLANGID id = setUSXXID selectedUSUserIndex fVALUE1 id
 
 getUSTEXTBOOKID :: SettingsViewModel -> Maybe Int
-getUSTEXTBOOKID vm = getUSXXID vm selectedUSLangIndex fVALUE1
-setUSTEXTBOOKID :: SettingsViewModel -> Int -> SettingsViewModel
-setUSTEXTBOOKID vm id = setUSXXID vm selectedUSLangIndex fVALUE1 id
+getUSTEXTBOOKID = getUSXXID selectedUSLangIndex fVALUE1
+setUSTEXTBOOKID :: Int -> SettingsViewModel -> SettingsViewModel
+setUSTEXTBOOKID id = setUSXXID selectedUSLangIndex fVALUE1 id
 
 getUSDICTONLINEID :: SettingsViewModel -> Maybe Int
-getUSDICTONLINEID vm = getUSXXID vm selectedUSLangIndex fVALUE2
-setUSDICTONLINEID :: SettingsViewModel -> Int -> SettingsViewModel
-setUSDICTONLINEID vm id = setUSXXID vm selectedUSLangIndex fVALUE2 id
+getUSDICTONLINEID = getUSXXID selectedUSLangIndex fVALUE2
+setUSDICTONLINEID :: Int -> SettingsViewModel -> SettingsViewModel
+setUSDICTONLINEID id = setUSXXID selectedUSLangIndex fVALUE2 id
 
 getUSDICTNOTEID :: SettingsViewModel -> Maybe Int
-getUSDICTNOTEID vm = getUSXXID vm selectedUSLangIndex fVALUE3
-setUSDICTNOTEID :: SettingsViewModel -> Int -> SettingsViewModel
-setUSDICTNOTEID vm id = setUSXXID vm selectedUSLangIndex fVALUE3 id
+getUSDICTNOTEID = getUSXXID selectedUSLangIndex fVALUE3
+setUSDICTNOTEID :: Int -> SettingsViewModel -> SettingsViewModel
+setUSDICTNOTEID id = setUSXXID selectedUSLangIndex fVALUE3 id
 
 getUSUNITFROM :: SettingsViewModel -> Maybe Int
-getUSUNITFROM vm = getUSXXID vm selectedUSTextbookIndex fVALUE1
-setUSUNITFROM :: SettingsViewModel -> Int -> SettingsViewModel
-setUSUNITFROM vm id = setUSXXID vm selectedUSTextbookIndex fVALUE1 id
+getUSUNITFROM = getUSXXID selectedUSTextbookIndex fVALUE1
+setUSUNITFROM :: Int -> SettingsViewModel -> SettingsViewModel
+setUSUNITFROM id = setUSXXID selectedUSTextbookIndex fVALUE1 id
 
 getUSPARTFROM :: SettingsViewModel -> Maybe Int
-getUSPARTFROM vm = getUSXXID vm selectedUSTextbookIndex fVALUE2
-setUSPARTFROM :: SettingsViewModel -> Int -> SettingsViewModel
-setUSPARTFROM vm id = setUSXXID vm selectedUSTextbookIndex fVALUE2 id
+getUSPARTFROM = getUSXXID selectedUSTextbookIndex fVALUE2
+setUSPARTFROM :: Int -> SettingsViewModel -> SettingsViewModel
+setUSPARTFROM id = setUSXXID selectedUSTextbookIndex fVALUE2 id
 
 getUSUNITTO :: SettingsViewModel -> Maybe Int
-getUSUNITTO vm = getUSXXID vm selectedUSTextbookIndex fVALUE3
-setUSUNITTO :: SettingsViewModel -> Int -> SettingsViewModel
-setUSUNITTO vm id = setUSXXID vm selectedUSTextbookIndex fVALUE3 id
+getUSUNITTO = getUSXXID selectedUSTextbookIndex fVALUE3
+setUSUNITTO :: Int -> SettingsViewModel -> SettingsViewModel
+setUSUNITTO id = setUSXXID selectedUSTextbookIndex fVALUE3 id
 
 getUSPARTTO :: SettingsViewModel -> Maybe Int
-getUSPARTTO vm = getUSXXID vm selectedUSTextbookIndex fVALUE4
-setUSPARTTO :: SettingsViewModel -> Int -> SettingsViewModel
-setUSPARTTO vm id = setUSXXID vm selectedUSTextbookIndex fVALUE4 id
+getUSPARTTO = getUSXXID selectedUSTextbookIndex fVALUE4
+setUSPARTTO :: Int -> SettingsViewModel -> SettingsViewModel
+setUSPARTTO id = setUSXXID selectedUSTextbookIndex fVALUE4 id
 
 getUSUNITPARTFROM :: SettingsViewModel -> Maybe Int
 getUSUNITPARTFROM vm = (+) <$> (*10) <$> getUSUNITFROM vm <*> getUSPARTFROM vm
@@ -91,3 +96,8 @@ isSingleUnitPart vm = (==) <$> getUSUNITPARTFROM vm <*> getUSUNITPARTTO vm
 isInvalidUnitPart :: SettingsViewModel -> Maybe Bool
 isInvalidUnitPart vm = (>) <$> getUSUNITPARTFROM vm <*> getUSUNITPARTTO vm
 
+getData :: IO SettingsViewModel
+getData = do
+    (r1, r2) <- concurrently (Models.MLanguage.getData) (Models.MUserSetting.getDataByUser 1)
+    let vm = def :: SettingsViewModel
+    return vm

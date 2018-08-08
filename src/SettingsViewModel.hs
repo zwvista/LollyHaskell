@@ -5,7 +5,20 @@
 {-# LANGUAGE TemplateHaskell #-}
 
 module SettingsViewModel
-    (
+    ( SettingsViewModel
+    , arrUserSettings
+    , selectedUSUserIndex
+    , selectedUSLangIndex
+    , selectedUSTextbookIndex
+    , arrLanguages
+    , selectedLangIndex
+    , arrDictsOnline
+    , selectedDictOnlineIndex
+    , arrDictsNote
+    , selectedDictNoteIndex
+    , arrTextbooks
+    , selectedTextbookIndex
+    , SettingsViewModel.getData
     ) where
 
 import Control.Concurrent.Async
@@ -13,6 +26,8 @@ import Control.Lens
 import Control.Monad
 import Control.Arrow
 import Data.Default.Class
+import Data.List
+import Data.Maybe
 import Data.Text (Text)
 import Data.Text.Read
 import Formatting
@@ -39,15 +54,10 @@ data SettingsViewModel = SettingsViewModel
     } deriving (Show, Generic, Default)
 makeLenses ''SettingsViewModel
 
-getIndex :: SettingsViewModel -> Lens' SettingsViewModel (Maybe Int) -> Int
-getIndex vm fIndex = case vm ^. fIndex of
-    Just n -> n
-    Nothing -> -1
-
 getUSXXID :: Lens' SettingsViewModel (Maybe Int) -> Lens' MUserSetting (Maybe Text) -> SettingsViewModel -> Maybe Int
-getUSXXID fIndex fValue vm = vm ^. arrUserSettings ^? ix (getIndex vm fIndex) >>= (^. fValue) >>= (decimal >>> (^? _Right)) <&> fst
+getUSXXID fIndex fValue vm = vm ^. arrUserSettings ^? ix (vm ^. fIndex . non (-1)) >>= (^. fValue) >>= (decimal >>> (^? _Right)) <&> fst
 setUSXXID :: Lens' SettingsViewModel (Maybe Int) -> Lens' MUserSetting (Maybe Text) -> Int -> SettingsViewModel -> SettingsViewModel
-setUSXXID fIndex fValue id vm = vm & arrUserSettings . ix (getIndex vm fIndex) . fValue . _Just .~ (sformat int id)
+setUSXXID fIndex fValue id vm = vm & arrUserSettings . ix (vm ^. fIndex . non (-1)) . fValue . _Just .~ (sformat int id)
 
 getUSLANGID :: SettingsViewModel -> Maybe Int
 getUSLANGID = getUSXXID selectedUSUserIndex fVALUE1
@@ -107,3 +117,4 @@ getData = do
     return $ (def :: SettingsViewModel)
         & arrLanguages .~ r1
         & arrUserSettings .~ r2
+        & selectedUSUserIndex .~ (findIndex (\o -> o ^. fKIND == 1) r2)

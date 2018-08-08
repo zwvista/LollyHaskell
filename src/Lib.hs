@@ -2,12 +2,13 @@ module Lib
     ( someFunc
     ) where
 
-import Models.MDictionary
-import Models.MLangPhrase
-import Models.MLanguage as MLanguage
-import Models.MTextbook
+import Control.Lens
+import SettingsViewModel
 import Text.Show.Unicode
 
 someFunc :: IO ()
 someFunc = do
-    mapM_ uprint =<< MLanguage.getData
+    vm <- SettingsViewModel.getData
+    mapM_ uprint $ vm ^. arrLanguages
+    mapM_ uprint $ vm ^. arrUserSettings
+    print $ vm ^. selectedUSUserIndex

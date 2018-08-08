@@ -21,15 +21,15 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
 - aeson
+- async
 - base >= 4.7 && < 5
 - data-default-class
+- formatting
+- lens
 - req
 - text
-- utf8-string
 - unicode-show
-- lens
-- formatting
-- async
+- utf8-string
 
 library:
   source-dirs: src

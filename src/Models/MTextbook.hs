@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
@@ -31,9 +32,9 @@ makeLenses ''MTextbook
 
 data MTextbooks = MTextbooks { _fTEXTBOOKS :: [MTextbook] } deriving (Show, Generic)
 
-customOptions = aesonDrop 2 match where
-    match "TEXTBOOKNAME" = "NAME"
-    match n = n
+customOptions = aesonDrop 2 $ \case
+    "TEXTBOOKNAME" -> "NAME"
+    n -> n
 
 instance ToJSON MTextbook where
     toJSON = genericToJSON customOptions

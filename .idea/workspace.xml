@@ -3,18 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="f2cda9fa-64e9-4b1a-bcfb-b19bf9073a6a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/package.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/MDictNote.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/MDictNote.hs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/MDictOffline.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/MDictOffline.hs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/MDictOnline.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/MDictOnline.hs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/MDictionary.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/MDictionary.hs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/MLangPhrase.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/MLangPhrase.hs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/MLangWord.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/MLangWord.hs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Models/MLanguage.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/MLanguage.hs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Models/MTextbook.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/MTextbook.hs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/MUnitPhrase.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/MUnitPhrase.hs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Models/MUnitWord.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/MUnitWord.hs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Models/MUserSetting.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Models/MUserSetting.hs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SettingsViewModel.hs" beforeDir="false" afterPath="$PROJECT_DIR$/src/SettingsViewModel.hs" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -38,7 +29,7 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="cabal" value="1" />
-          <entry key="hs" value="186" />
+          <entry key="hs" value="197" />
           <entry key="iml" value="2" />
           <entry key="md" value="1" />
           <entry key="yaml" value="10" />
@@ -47,7 +38,7 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Cabal file" value="1" />
-          <entry key="Haskell file" value="186" />
+          <entry key="Haskell file" value="197" />
           <entry key="IDEA_MODULE" value="2" />
           <entry key="Markdown" value="1" />
           <entry key="YAML" value="10" />
@@ -55,7 +46,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Haskell file" value="1927" />
+          <entry key="Haskell file" value="2140" />
           <entry key="YAML" value="59" />
         </counts>
       </usages-collector>
@@ -63,7 +54,7 @@
       <usages-collector id="statistics.spring.boot.mvc.usages" />
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="hs" value="1927" />
+          <entry key="hs" value="2140" />
           <entry key="yaml" value="59" />
         </counts>
       </usages-collector>
@@ -72,83 +63,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/SettingsViewModel.hs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="61" column="49" lean-forward="true" selection-start-line="61" selection-start-column="49" selection-end-line="61" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Models/MDictionary.hs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-258">
-              <caret line="3" lean-forward="true" selection-end-line="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Models/MDictNote.hs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-198">
-              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Models/MDictOffline.hs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-198">
-              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Models/MDictOnline.hs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Models/MLangPhrase.hs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-291">
-              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Models/MLanguage.hs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-284">
-              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Models/MLangWord.hs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Models/MUserSetting.hs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-70">
-              <caret line="11" column="13" lean-forward="true" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+            <state relative-caret-position="297">
+              <caret line="43" column="4" lean-forward="true" selection-start-line="43" selection-start-column="4" selection-end-line="43" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -156,8 +75,35 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Models/MUnitWord.hs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
+            <state relative-caret-position="338">
+              <caret line="50" column="37" selection-start-line="50" selection-start-column="37" selection-end-line="50" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Models/MUnitPhrase.hs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
               <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Models/MTextbook.hs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="372">
+              <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Models/MLanguage.hs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="245">
+              <caret line="30" column="10" lean-forward="true" selection-start-line="30" selection-start-column="10" selection-end-line="30" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -188,6 +134,7 @@
       <find>def</find>
       <find>vm id = setUSXXID vm</find>
       <find>SettingsViewModel -&gt; Int</find>
+      <find>match</find>
     </findStrings>
     <replaceStrings>
       <replace>Textbook</replace>
@@ -237,13 +184,13 @@
         <option value="$PROJECT_DIR$/src/Models/MDictOffline.hs" />
         <option value="$PROJECT_DIR$/src/Models/MDictOnline.hs" />
         <option value="$PROJECT_DIR$/src/Models/MLangPhrase.hs" />
-        <option value="$PROJECT_DIR$/src/Models/MLanguage.hs" />
         <option value="$PROJECT_DIR$/src/Models/MLangWord.hs" />
-        <option value="$PROJECT_DIR$/src/Models/MTextbook.hs" />
         <option value="$PROJECT_DIR$/src/Models/MUnitPhrase.hs" />
-        <option value="$PROJECT_DIR$/src/Models/MUnitWord.hs" />
         <option value="$PROJECT_DIR$/src/Models/MUserSetting.hs" />
+        <option value="$PROJECT_DIR$/src/Models/MUnitWord.hs" />
         <option value="$PROJECT_DIR$/src/SettingsViewModel.hs" />
+        <option value="$PROJECT_DIR$/src/Models/MTextbook.hs" />
+        <option value="$PROJECT_DIR$/src/Models/MLanguage.hs" />
       </list>
     </option>
   </component>
@@ -338,7 +285,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1533699830147" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1533732225689" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="project.structure.last.edited" value="SDKs" />
@@ -442,18 +389,18 @@
       <workItem from="1533288437252" duration="773000" />
       <workItem from="1533390382295" duration="199000" />
       <workItem from="1533397167284" duration="55473000" />
-      <workItem from="1533643290223" duration="7291000" />
+      <workItem from="1533643290223" duration="10357000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="102850000" />
+    <option name="totallyTimeSpent" value="105916000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="19" y="42" width="1400" height="777" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26435935" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26435935" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -462,7 +409,7 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.329927" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32846716" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32846716" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -569,13 +516,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Helpers.hs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/package.yaml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="215">
@@ -604,34 +544,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Models/MTextbook.hs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Models/MUnitPhrase.hs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Models/MUnitWord.hs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Models/MUserSetting.hs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-70">
-          <caret line="11" column="13" lean-forward="true" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Models/MDictionary.hs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-258">
@@ -646,16 +558,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Models/MDictOffline.hs">
+    <entry file="file://$PROJECT_DIR$/src/Models/MLangWord.hs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-198">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Models/MDictOnline.hs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
+        <state relative-caret-position="-321">
           <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
         </state>
       </provider>
@@ -667,24 +572,66 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Models/MLanguage.hs">
+    <entry file="file://$PROJECT_DIR$/src/Models/MDictOnline.hs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-284">
+        <state relative-caret-position="465">
+          <caret line="31" column="43" lean-forward="true" selection-start-line="31" selection-start-column="43" selection-end-line="31" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Helpers.hs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Models/MDictOffline.hs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="27">
           <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Models/MLangWord.hs">
+    <entry file="file://$PROJECT_DIR$/src/Models/MUserSetting.hs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+        <state relative-caret-position="-365">
+          <caret line="11" column="13" lean-forward="true" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/SettingsViewModel.hs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="61" column="49" lean-forward="true" selection-start-line="61" selection-start-column="49" selection-end-line="61" selection-end-column="49" />
+        <state relative-caret-position="297">
+          <caret line="43" column="4" lean-forward="true" selection-start-line="43" selection-start-column="4" selection-end-line="43" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Models/MUnitWord.hs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="338">
+          <caret line="50" column="37" selection-start-line="50" selection-start-column="37" selection-end-line="50" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Models/MUnitPhrase.hs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="3" lean-forward="true" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Models/MTextbook.hs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="372">
+          <caret line="38" column="20" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Models/MLanguage.hs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="245">
+          <caret line="30" column="10" lean-forward="true" selection-start-line="30" selection-start-column="10" selection-end-line="30" selection-end-column="10" />
         </state>
       </provider>
     </entry>

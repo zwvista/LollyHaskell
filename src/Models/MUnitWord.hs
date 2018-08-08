@@ -40,10 +40,10 @@ data MUnitWord = MUnitWord
 makeLenses ''MUnitWord
 
 fWORDNOTE :: MUnitWord -> Text
-fWORDNOTE w = w^.fWORD <> match (w^.fNOTE) where
-    match Nothing = ""
-    match (Just "") = ""
-    match (Just a) = "(" <> a <> ")"
+fWORDNOTE w = w ^. fWORD <> case w ^. fNOTE of
+    Nothing -> ""
+    Just "" -> ""
+    Just a -> "(" <> a <> ")"
 
 data MUnitWords = MUnitWords { _fVUNITWORDS :: [MUnitWord] } deriving (Show, Generic)
 

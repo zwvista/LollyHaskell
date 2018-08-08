@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
@@ -25,9 +26,9 @@ makeLenses ''MLanguage
 
 data MLanguages = MLanguages { _fLANGUAGES :: [MLanguage] } deriving (Show, Generic)
 
-customOptions = aesonDrop 2 match where
-    match "LANGNAME" = "NAME"
-    match n = n
+customOptions = aesonDrop 2 $ \case
+    "LANGNAME" -> "NAME"
+    n -> n
 
 instance ToJSON MLanguage where
     toJSON = genericToJSON customOptions

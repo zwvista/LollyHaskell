@@ -17,32 +17,37 @@ import Data.Text (Text)
 import Data.Text.Read
 import Formatting
 import GHC.Generics
-import Models.MDictOnline
 import Models.MDictNote
+import Models.MDictOnline
 import Models.MLanguage
 import Models.MTextbook
 import Models.MUserSetting
 
 data SettingsViewModel = SettingsViewModel
     { _arrUserSettings :: [MUserSetting]
-    , _selectedUSUserIndex :: Int
-    , _selectedUSLangIndex :: Int
-    , _selectedUSTextbookIndex :: Int
+    , _selectedUSUserIndex :: Maybe Int
+    , _selectedUSLangIndex :: Maybe Int
+    , _selectedUSTextbookIndex :: Maybe Int
     , _arrLanguages :: [MLanguage]
-    , _selectedLangIndex :: Int
+    , _selectedLangIndex :: Maybe Int
     , _arrDictsOnline :: [MDictOnline]
-    , _selectedDictOnlineIndex :: Int
+    , _selectedDictOnlineIndex :: Maybe Int
     , _arrDictsNote :: [MDictNote]
-    , _selectedDictNoteIndex :: Int
+    , _selectedDictNoteIndex :: Maybe Int
     , _arrTextbooks :: [MTextbook]
-    , _selectedTextbookIndex :: Int
+    , _selectedTextbookIndex :: Maybe Int
     } deriving (Show, Generic, Default)
 makeLenses ''SettingsViewModel
 
-getUSXXID :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> SettingsViewModel -> Maybe Int
-getUSXXID fIndex fValue vm = vm ^. arrUserSettings ^? ix (vm ^. fIndex) >>= (^. fValue) >>= (decimal >>> (^? _Right)) <&> fst
-setUSXXID :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> Int -> SettingsViewModel -> SettingsViewModel
-setUSXXID fIndex fValue id vm = vm & arrUserSettings . ix (vm ^. fIndex) . fValue . _Just .~ (sformat int id)
+getIndex :: SettingsViewModel -> Lens' SettingsViewModel (Maybe Int) -> Int
+getIndex vm fIndex = case vm ^. fIndex of
+    Just n -> n
+    Nothing -> -1
+
+getUSXXID :: Lens' SettingsViewModel (Maybe Int) -> Lens' MUserSetting (Maybe Text) -> SettingsViewModel -> Maybe Int
+getUSXXID fIndex fValue vm = vm ^. arrUserSettings ^? ix (getIndex vm fIndex) >>= (^. fValue) >>= (decimal >>> (^? _Right)) <&> fst
+setUSXXID :: Lens' SettingsViewModel (Maybe Int) -> Lens' MUserSetting (Maybe Text) -> Int -> SettingsViewModel -> SettingsViewModel
+setUSXXID fIndex fValue id vm = vm & arrUserSettings . ix (getIndex vm fIndex) . fValue . _Just .~ (sformat int id)
 
 getUSLANGID :: SettingsViewModel -> Maybe Int
 getUSLANGID = getUSXXID selectedUSUserIndex fVALUE1
@@ -99,5 +104,6 @@ isInvalidUnitPart vm = (>) <$> getUSUNITPARTFROM vm <*> getUSUNITPARTTO vm
 getData :: IO SettingsViewModel
 getData = do
     (r1, r2) <- concurrently (Models.MLanguage.getData) (Models.MUserSetting.getDataByUser 1)
-    let vm = def :: SettingsViewModel
-    return vm
+    return $ (def :: SettingsViewModel)
+        & arrLanguages .~ r1
+        & arrUserSettings .~ r2

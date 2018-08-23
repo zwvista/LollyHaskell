@@ -20,7 +20,33 @@ module SettingsViewModel
     , selectedTextbookIndex
     , arrUnits
     , arrParts
+    , getUSLANGID
+    , setUSLANGID
+    , getUSTEXTBOOKID
+    , setUSTEXTBOOKID
+    , getUSDICTONLINEID
+    , setUSDICTONLINEID
+    , getUSDICTNOTEID
+    , setUSDICTNOTEID
+    , getUSUNITFROM
+    , setUSUNITFROM
+    , getUSPARTFROM
+    , setUSPARTFROM
+    , getUSUNITTO
+    , setUSUNITTO
+    , getUSPARTTO
+    , setUSPARTTO
+    , getUSUNITPARTFROM
+    , getUSUNITPARTTO
+    , isSingleUnitPart
+    , isInvalidUnitPart
+    , selectedLang
+    , selectedDictOnline
+    , selectedDictNote
+    , selectedTextbook
     , SettingsViewModel.getData
+    , setSelectedLangIndex
+    , setSelectedTextbookIndex
     ) where
 
 import Control.Concurrent.Async
@@ -29,10 +55,10 @@ import Control.Monad
 import Control.Arrow
 import Data.Default.Class
 import Data.List
-import Data.Text (Text)
+import Data.Text (Text, splitOn)
 import Data.Text.Read
 import Formatting
-import GHC.Generics
+import GHC.Generics (Generic)
 import Models.MDictNote
 import Models.MDictOnline
 import Models.MLanguage
@@ -57,9 +83,9 @@ data SettingsViewModel = SettingsViewModel
     } deriving (Show, Generic, Default)
 makeLenses ''SettingsViewModel
 
-getUSXXID :: Lens' SettingsViewModel (Int) -> Lens' MUserSetting (Maybe Text) -> SettingsViewModel -> Int
-getUSXXID fIndex fValue vm = vm ^. arrUserSettings ^?! ix (vm ^. fIndex) . fValue ^?! _Just ^. Control.Lens.to decimal ^?! _Right ._1
-setUSXXID :: Lens' SettingsViewModel (Int) -> Lens' MUserSetting (Maybe Text) -> Int -> SettingsViewModel -> SettingsViewModel
+getUSXXID :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> SettingsViewModel -> Int
+getUSXXID fIndex fValue vm = vm ^. arrUserSettings ^?! ix (vm ^. fIndex) . fValue ^?! _Just . to decimal ^?! _Right . _1
+setUSXXID :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> Int -> SettingsViewModel -> SettingsViewModel
 setUSXXID fIndex fValue id vm = vm & arrUserSettings . ix (vm ^. fIndex) . fValue . _Just .~ (sformat int id)
 
 getUSLANGID :: SettingsViewModel -> Int
@@ -158,7 +184,7 @@ setSelectedTextbookIndex :: Int -> SettingsViewModel -> SettingsViewModel
 setSelectedTextbookIndex textbookindex vm =
     let vm2 = vm & selectedTextbookIndex .~ textbookindex
         textbookid = selectedTextbook vm2 ^. Models.MTextbook.fID
-        vm3 = vm2 & setUSTEXTBOOKID textbookid
-            & selectedUSTextbookIndex .~ (findIndex (\o -> o ^. fKIND == 3 && o ^. fENTITYID == textbookid) (vm2 ^.arrUserSettings) ^. non (-1))
-            & arrUnits .~ ([1..(selectedTextbook vm2 ^. fUNITS)] <&> sformat int)
-    in vm3
+    in vm2 & setUSTEXTBOOKID textbookid
+        & selectedUSTextbookIndex .~ (findIndex (\o -> o ^. fKIND == 3 && o ^. fENTITYID == textbookid) (vm2 ^.arrUserSettings) ^. non (-1))
+        & arrUnits .~ ([1..(selectedTextbook vm2 ^. fUNITS)] <&> sformat int)
+        & arrParts .~ (selectedTextbook vm2 ^. fPARTS & splitOn " ")

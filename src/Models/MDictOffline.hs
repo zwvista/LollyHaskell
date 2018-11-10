@@ -10,7 +10,7 @@ module Models.MDictOffline
     , fDICTNAME
     , fURL
     , fCHCONV
-    , fTRANSFORM_MAC
+    , fTRANSFORM
     , fWAIT
     , fTEMPLATE
     , getDataByLang

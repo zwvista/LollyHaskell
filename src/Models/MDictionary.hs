@@ -10,7 +10,7 @@ module Models.MDictionary
     , fDICTNAME
     , fURL
     , fCHCONV
-    , fTRANSFORM_MAC
+    , fTRANSFORM
     , fWAIT
     , fTEMPLATE
     ) where
@@ -30,7 +30,7 @@ data MDictionary = MDictionary
     , _fDICTNAME :: Text
     , _fURL :: Maybe Text
     , _fCHCONV :: Maybe Text
-    , _fTRANSFORM_MAC :: Maybe Text
+    , _fTRANSFORM :: Maybe Text
     , _fWAIT :: Maybe Int
     , _fTEMPLATE :: Maybe Text
     } deriving (Show, Generic)

@@ -59,6 +59,7 @@ import Data.Text (Text, splitOn)
 import Data.Text.Read
 import Formatting
 import GHC.Generics (Generic)
+import Models.MAutoCorrect
 import Models.MDictNote
 import Models.MDictOnline
 import Models.MLanguage
@@ -80,6 +81,7 @@ data SettingsViewModel = SettingsViewModel
     , _selectedTextbookIndex :: Int
     , _arrUnits :: [Text]
     , _arrParts :: [Text]
+    , _arrAutoCorrect :: [MAutoCorrect]
     } deriving (Show, Generic, Default)
 makeLenses ''SettingsViewModel
 
@@ -167,17 +169,19 @@ setSelectedLangIndex langindex vm = do
         langid = selectedLang vm2 ^. Models.MLanguage.fID
         vm3 = vm2 & setUSLANGID langid
             & selectedUSLangIndex .~ (findIndex (\o -> o ^. fKIND == 2 && o ^. fENTITYID == langid) (vm2 ^.arrUserSettings) ^. non (-1))
-    (r1, r2, r3)
-        <- runConcurrently $ (,,)
+    (r1, r2, r3, r4)
+        <- runConcurrently $ (,,,)
         <$> (Concurrently (Models.MDictOnline.getDataByLang langid))
         <*> (Concurrently (Models.MDictNote.getDataByLang langid))
         <*> (Concurrently (Models.MTextbook.getDataByLang langid))
+        <*> (Concurrently (Models.MAutoCorrect.getDataByLang langid))
     let vm4 = vm3
             & arrDictsOnline .~ r1
             & selectedDictOnlineIndex .~ (findIndex (\o -> o ^. Models.MDictOnline.fID == getUSDICTONLINEID vm3) r1 ^. non (-1))
             & arrDictsNote .~ r2
             & selectedDictNoteIndex .~ (findIndex (\o -> o ^. Models.MDictNote.fID == getUSDICTNOTEID vm3) r2 ^. non (-1))
             & arrTextbooks .~ r3
+            & arrAutoCorrect .~ r4
     return $ setSelectedTextbookIndex (findIndex (\o -> o ^. Models.MTextbook.fID == getUSTEXTBOOKID vm3) r3 ^. non (-1)) vm4
 
 setSelectedTextbookIndex :: Int -> SettingsViewModel -> SettingsViewModel

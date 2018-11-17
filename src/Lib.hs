@@ -3,12 +3,12 @@ module Lib
     ) where
 
 import Control.Lens
-import SettingsViewModel
+import ViewModels.SettingsViewModel
 import Text.Show.Unicode
 
 someFunc :: IO ()
 someFunc = do
-    vm <- SettingsViewModel.getData
+    vm <- getData
     uprint $ vm ^. arrUserSettings ^?! ix (vm ^. selectedUSUserIndex)
     uprint $ vm ^. arrUserSettings ^?! ix (vm ^. selectedUSLangIndex)
     uprint $ vm ^. arrUserSettings ^?! ix (vm ^. selectedUSTextbookIndex)

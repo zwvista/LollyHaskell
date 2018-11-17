@@ -4,7 +4,7 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module SettingsViewModel
+module ViewModels.SettingsViewModel
     ( SettingsViewModel
     , arrUserSettings
     , selectedUSUserIndex
@@ -44,7 +44,7 @@ module SettingsViewModel
     , selectedDictOnline
     , selectedDictNote
     , selectedTextbook
-    , SettingsViewModel.getData
+    , ViewModels.SettingsViewModel.getData
     , setSelectedLangIndex
     , setSelectedTextbookIndex
     ) where

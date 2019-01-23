@@ -13,6 +13,6 @@ someFunc = do
     uprint $ vm ^. arrUserSettings ^?! ix (vm ^. selectedUSLangIndex)
     uprint $ vm ^. arrUserSettings ^?! ix (vm ^. selectedUSTextbookIndex)
     uprint $ selectedLang vm
-    uprint $ selectedDictOnline vm
+    uprint $ selectedDictPicker vm
     uprint $ selectedDictNote vm
     uprint $ selectedTextbook vm

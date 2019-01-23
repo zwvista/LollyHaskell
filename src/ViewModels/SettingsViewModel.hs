@@ -12,8 +12,9 @@ module ViewModels.SettingsViewModel
     , selectedUSTextbookIndex
     , arrLanguages
     , selectedLangIndex
-    , arrDictsOnline
-    , selectedDictOnlineIndex
+    , arrDictsWord
+    , arrDictsPicker
+    , selectedDictPickerIndex
     , arrDictsNote
     , selectedDictNoteIndex
     , arrTextbooks
@@ -24,8 +25,8 @@ module ViewModels.SettingsViewModel
     , setUSLANGID
     , getUSTEXTBOOKID
     , setUSTEXTBOOKID
-    , getUSDICTONLINEID
-    , setUSDICTONLINEID
+    , getUSDICTPICKER
+    , setUSDICTPICKER
     , getUSDICTNOTEID
     , setUSDICTNOTEID
     , getUSUNITFROM
@@ -41,7 +42,7 @@ module ViewModels.SettingsViewModel
     , isSingleUnitPart
     , isInvalidUnitPart
     , selectedLang
-    , selectedDictOnline
+    , selectedDictPicker
     , selectedDictNote
     , selectedTextbook
     , ViewModels.SettingsViewModel.getData
@@ -52,7 +53,6 @@ module ViewModels.SettingsViewModel
 import Control.Concurrent.Async
 import Control.Lens
 import Control.Monad
-import Control.Arrow
 import Data.Default.Class
 import Data.List
 import Data.Text (Text, splitOn)
@@ -60,8 +60,9 @@ import Data.Text.Read
 import Formatting
 import GHC.Generics (Generic)
 import Models.MAutoCorrect
+import Models.MDictPicker
 import Models.MDictNote
-import Models.MDictOnline
+import Models.MDictWord
 import Models.MLanguage
 import Models.MTextbook
 import Models.MUserSetting
@@ -73,8 +74,9 @@ data SettingsViewModel = SettingsViewModel
     , _selectedUSTextbookIndex :: Int
     , _arrLanguages :: [MLanguage]
     , _selectedLangIndex :: Int
-    , _arrDictsOnline :: [MDictOnline]
-    , _selectedDictOnlineIndex :: Int
+    , _arrDictsWord :: [MDictWord]
+    , _arrDictsPicker :: [MDictPicker]
+    , _selectedDictPickerIndex :: Int
     , _arrDictsNote :: [MDictNote]
     , _selectedDictNoteIndex :: Int
     , _arrTextbooks :: [MTextbook]
@@ -84,6 +86,11 @@ data SettingsViewModel = SettingsViewModel
     , _arrAutoCorrect :: [MAutoCorrect]
     } deriving (Show, Generic, Default)
 makeLenses ''SettingsViewModel
+
+getUSXX :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> SettingsViewModel -> Maybe Text
+getUSXX fIndex fValue vm = vm ^. arrUserSettings ^?! ix (vm ^. fIndex) . fValue
+setUSXX :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> Text -> SettingsViewModel -> SettingsViewModel
+setUSXX fIndex fValue id vm = vm & arrUserSettings . ix (vm ^. fIndex) . fValue . _Just .~ id
 
 getUSXXID :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> SettingsViewModel -> Int
 getUSXXID fIndex fValue vm = vm ^. arrUserSettings ^?! ix (vm ^. fIndex) . fValue ^?! _Just . to decimal ^?! _Right . _1
@@ -100,15 +107,20 @@ getUSTEXTBOOKID = getUSXXID selectedUSLangIndex fVALUE1
 setUSTEXTBOOKID :: Int -> SettingsViewModel -> SettingsViewModel
 setUSTEXTBOOKID id = setUSXXID selectedUSLangIndex fVALUE1 id
 
-getUSDICTONLINEID :: SettingsViewModel -> Int
-getUSDICTONLINEID = getUSXXID selectedUSLangIndex fVALUE2
-setUSDICTONLINEID :: Int -> SettingsViewModel -> SettingsViewModel
-setUSDICTONLINEID id = setUSXXID selectedUSLangIndex fVALUE2 id
+getUSDICTPICKER :: SettingsViewModel -> Text
+getUSDICTPICKER vm = getUSXX selectedUSLangIndex fVALUE2 vm ^?! _Just
+setUSDICTPICKER :: Text -> SettingsViewModel -> SettingsViewModel
+setUSDICTPICKER id = setUSXX selectedUSLangIndex fVALUE2 id
 
 getUSDICTNOTEID :: SettingsViewModel -> Int
 getUSDICTNOTEID = getUSXXID selectedUSLangIndex fVALUE3
 setUSDICTNOTEID :: Int -> SettingsViewModel -> SettingsViewModel
 setUSDICTNOTEID id = setUSXXID selectedUSLangIndex fVALUE3 id
+
+getUSDICTSPICKER :: SettingsViewModel -> Text
+getUSDICTSPICKER vm = getUSXX selectedUSLangIndex fVALUE4 vm ^. non "0"
+setUSDICTSPICKER :: Text -> SettingsViewModel -> SettingsViewModel
+setUSDICTSPICKER id = setUSXX selectedUSLangIndex fVALUE4 id
 
 getUSUNITFROM :: SettingsViewModel -> Int
 getUSUNITFROM = getUSXXID selectedUSTextbookIndex fVALUE1
@@ -145,8 +157,8 @@ isInvalidUnitPart vm = getUSUNITPARTFROM vm > getUSUNITPARTTO vm
 selectedLang :: SettingsViewModel -> MLanguage
 selectedLang vm = vm ^. arrLanguages ^?! ix (vm ^. selectedLangIndex)
 
-selectedDictOnline :: SettingsViewModel -> MDictOnline
-selectedDictOnline vm = vm ^. arrDictsOnline ^?! ix (vm ^. selectedDictOnlineIndex)
+selectedDictPicker :: SettingsViewModel -> MDictPicker
+selectedDictPicker vm = vm ^. arrDictsPicker ^?! ix (vm ^. selectedDictPickerIndex)
 
 selectedDictNote :: SettingsViewModel -> MDictNote
 selectedDictNote vm = vm ^. arrDictsNote ^?! ix (vm ^. selectedDictNoteIndex)
@@ -163,26 +175,33 @@ getData = do
             & selectedUSUserIndex .~ (findIndex (\o -> o ^. fKIND == 1) r2 ^. non (-1))
     setSelectedLangIndex (findIndex (\o -> o ^. Models.MLanguage.fID == getUSLANGID vm) r1 ^. non (-1)) vm
 
+computeDictPicker :: SettingsViewModel -> ([MDictPicker], Int) -> Text -> ([MDictPicker], Int)
+computeDictPicker vm (lst, i) d
+    | d == "0" = (lst ++ (vm ^. arrDictsWord <&> (\o -> MDictPicker{ _fDICTID = sformat int (o ^. Models.MDictWord.fDICTID), _fDICTNAME = o ^. Models.MDictWord.fDICTNAME })), i)
+    | otherwise = (lst ++ [MDictPicker{ _fDICTID = d, _fDICTNAME = sformat ("Custom" % int) i }], i + 1)
+
 setSelectedLangIndex :: Int -> SettingsViewModel -> IO SettingsViewModel
 setSelectedLangIndex langindex vm = do
     let vm2 = vm & selectedLangIndex .~ langindex
         langid = selectedLang vm2 ^. Models.MLanguage.fID
         vm3 = vm2 & setUSLANGID langid
             & selectedUSLangIndex .~ (findIndex (\o -> o ^. fKIND == 2 && o ^. fENTITYID == langid) (vm2 ^.arrUserSettings) ^. non (-1))
+        dicts = vm3 & getUSDICTSPICKER & splitOn "\r\n"
     (r1, r2, r3, r4)
         <- runConcurrently $ (,,,)
-        <$> (Concurrently (Models.MDictOnline.getDataByLang langid))
+        <$> (Concurrently (Models.MDictWord.getDataByLang langid))
         <*> (Concurrently (Models.MDictNote.getDataByLang langid))
         <*> (Concurrently (Models.MTextbook.getDataByLang langid))
         <*> (Concurrently (Models.MAutoCorrect.getDataByLang langid))
-    let vm4 = vm3
-            & arrDictsOnline .~ r1
-            & selectedDictOnlineIndex .~ (findIndex (\o -> o ^. Models.MDictOnline.fID == getUSDICTONLINEID vm3) r1 ^. non (-1))
+    let vm4 = vm3 & arrDictsWord .~ r1
+        vm5 = vm4
+            & arrDictsPicker .~ (foldl (computeDictPicker vm4) ([], 1) dicts ^. _1)
+            & selectedDictPickerIndex .~ (findIndex (\o -> o ^. Models.MDictPicker.fDICTID == getUSDICTPICKER vm4) (vm4 ^. arrDictsPicker) ^. non (-1))
             & arrDictsNote .~ r2
-            & selectedDictNoteIndex .~ (findIndex (\o -> o ^. Models.MDictNote.fID == getUSDICTNOTEID vm3) r2 ^. non (-1))
+            & selectedDictNoteIndex .~ (findIndex (\o -> o ^. Models.MDictNote.fID == getUSDICTNOTEID vm4) r2 ^. non (-1))
             & arrTextbooks .~ r3
             & arrAutoCorrect .~ r4
-    return $ setSelectedTextbookIndex (findIndex (\o -> o ^. Models.MTextbook.fID == getUSTEXTBOOKID vm3) r3 ^. non (-1)) vm4
+    return $ setSelectedTextbookIndex (findIndex (\o -> o ^. Models.MTextbook.fID == getUSTEXTBOOKID vm4) r3 ^. non (-1)) vm4
 
 setSelectedTextbookIndex :: Int -> SettingsViewModel -> SettingsViewModel
 setSelectedTextbookIndex textbookindex vm =

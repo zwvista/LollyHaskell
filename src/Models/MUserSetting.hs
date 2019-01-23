@@ -15,7 +15,7 @@ module Models.MUserSetting
     , getDataByUser
     , updateLang
     , updateTextbook
-    , updateDictOnline
+    , updateDictPicker
     , updateDictNote
     , updateUnitFrom
     , updatePartFrom
@@ -74,8 +74,8 @@ updateLang id langid = update id ("VALUE1=" ++ show langid)
 updateTextbook :: Int -> Int -> IO (Maybe String)
 updateTextbook id textbookid = update id ("VALUE1=" ++ show textbookid)
 
-updateDictOnline :: Int -> Int -> IO (Maybe String)
-updateDictOnline id dictonlineid = update id ("VALUE2=" ++ show dictonlineid)
+updateDictPicker :: Int -> Int -> IO (Maybe String)
+updateDictPicker id dictpicker = update id ("VALUE2=" ++ show dictpicker)
 
 updateDictNote :: Int -> Int -> IO (Maybe String)
 updateDictNote id dictnoteid = update id ("VALUE3=" ++ show dictnoteid)

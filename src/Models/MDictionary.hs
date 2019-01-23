@@ -5,6 +5,7 @@
 module Models.MDictionary
     ( MDictionary
     , fID
+    , fDICTID
     , fLANGIDFROM
     , fDICTTYPENAME
     , fDICTNAME
@@ -25,6 +26,7 @@ import Network.HTTP.Req
 
 data MDictionary = MDictionary
     { _fID :: Int
+    , _fDICTID :: Int
     , _fLANGIDFROM :: Int
     , _fDICTTYPENAME :: Text
     , _fDICTNAME :: Text

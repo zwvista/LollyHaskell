@@ -2,9 +2,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Models.MDictOffline
-    ( MDictOffline
+module Models.MDictWord
+    ( MDictWord
     , fID
+    , fDICTID
     , fLANGIDFROM
     , fDICTTYPENAME
     , fDICTNAME
@@ -25,15 +26,15 @@ import Helpers
 import Models.MDictionary
 import Network.HTTP.Req
 
-type MDictOffline = MDictionary
-data MDictsOffline = MDictsOffline { _fVDICTSOFFLINE :: [MDictOffline] } deriving (Show, Generic)
+type MDictWord = MDictionary
+data MDictsWord = MDictsWord { _fVDICTSWORD :: [MDictWord] } deriving (Show, Generic)
 
-instance FromJSON MDictsOffline where
+instance FromJSON MDictsWord where
     parseJSON = genericParseJSON customOptionsLolly
 
-getDataByLang :: Int -> IO [MDictOffline]
+getDataByLang :: Int -> IO [MDictWord]
 getDataByLang langid = runReq def $ do
-    v <- req GET (urlLolly /: "VDICTSOFFLINE") NoReqBody jsonResponse $
+    v <- req GET (urlLolly /: "VDICTSWORD") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGIDFROM,eq," ++ show langid)
-    return $ _fVDICTSOFFLINE (responseBody v :: MDictsOffline)
+    return $ _fVDICTSWORD (responseBody v :: MDictsWord)

@@ -175,9 +175,9 @@ getData = do
             & selectedUSUserIndex .~ (findIndex (\o -> o ^. fKIND == 1) r2 ^. non (-1))
     setSelectedLangIndex (findIndex (\o -> o ^. Models.MLanguage.fID == getUSLANGID vm) r1 ^. non (-1)) vm
 
-computeDictPicker :: SettingsViewModel -> ([MDictPicker], Int) -> Text -> ([MDictPicker], Int)
-computeDictPicker vm (lst, i) d
-    | d == "0" = (lst ++ (vm ^. arrDictsWord <&> (\o -> MDictPicker{ _fDICTID = sformat int (o ^. Models.MDictWord.fDICTID), _fDICTNAME = o ^. Models.MDictWord.fDICTNAME })), i)
+computeDictPicker :: [MDictWord] -> ([MDictPicker], Int) -> Text -> ([MDictPicker], Int)
+computeDictPicker arr (lst, i) d
+    | d == "0" = (lst ++ (arr <&> (\o -> MDictPicker{ _fDICTID = sformat int (o ^. Models.MDictWord.fDICTID), _fDICTNAME = o ^. Models.MDictWord.fDICTNAME })), i)
     | otherwise = (lst ++ [MDictPicker{ _fDICTID = d, _fDICTNAME = sformat ("Custom" % int) i }], i + 1)
 
 setSelectedLangIndex :: Int -> SettingsViewModel -> IO SettingsViewModel
@@ -194,14 +194,14 @@ setSelectedLangIndex langindex vm = do
         <*> (Concurrently (Models.MTextbook.getDataByLang langid))
         <*> (Concurrently (Models.MAutoCorrect.getDataByLang langid))
     let vm4 = vm3 & arrDictsWord .~ r1
+            & arrDictsPicker .~ (foldl (computeDictPicker r1) ([], 1) dicts ^. _1)
         vm5 = vm4
-            & arrDictsPicker .~ (foldl (computeDictPicker vm4) ([], 1) dicts ^. _1)
             & selectedDictPickerIndex .~ (findIndex (\o -> o ^. Models.MDictPicker.fDICTID == getUSDICTPICKER vm4) (vm4 ^. arrDictsPicker) ^. non (-1))
             & arrDictsNote .~ r2
             & selectedDictNoteIndex .~ (findIndex (\o -> o ^. Models.MDictNote.fID == getUSDICTNOTEID vm4) r2 ^. non (-1))
             & arrTextbooks .~ r3
             & arrAutoCorrect .~ r4
-    return $ setSelectedTextbookIndex (findIndex (\o -> o ^. Models.MTextbook.fID == getUSTEXTBOOKID vm4) r3 ^. non (-1)) vm4
+    return $ setSelectedTextbookIndex (findIndex (\o -> o ^. Models.MTextbook.fID == getUSTEXTBOOKID vm5) r3 ^. non (-1)) vm5
 
 setSelectedTextbookIndex :: Int -> SettingsViewModel -> SettingsViewModel
 setSelectedTextbookIndex textbookindex vm =

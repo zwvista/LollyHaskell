@@ -3,8 +3,11 @@ module Lib
     ) where
 
 import Control.Lens
-import ViewModels.SettingsViewModel
+import Data.List (find)
+import Models.MDictPicker
+import Models.MDictWord
 import Text.Show.Unicode
+import ViewModels.SettingsViewModel
 
 someFunc :: IO ()
 someFunc = do
@@ -14,5 +17,6 @@ someFunc = do
     uprint $ vm ^. arrUserSettings ^?! ix (vm ^. selectedUSTextbookIndex)
     uprint $ selectedLang vm
     uprint $ selectedDictPicker vm
+    uprint $ find (\o -> o ^. Models.MDictWord.fDICTNAME == selectedDictPicker vm ^. Models.MDictPicker.fDICTNAME) (vm ^. arrDictsWord) ^?! _Just
     uprint $ selectedDictNote vm
     uprint $ selectedTextbook vm

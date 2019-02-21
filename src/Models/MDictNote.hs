@@ -1,6 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 
 module Models.MDictNote
     ( MDictNote
@@ -26,7 +25,7 @@ import Models.MDictionary
 import Network.HTTP.Req
 
 type MDictNote = MDictionary
-data MDictsNote = MDictsNote { _fVDICTSNOTE :: [MDictNote] } deriving (Show, Generic)
+newtype MDictsNote = MDictsNote{_fVDICTSNOTE :: [MDictNote]} deriving (Show, Generic)
 
 instance FromJSON MDictsNote where
     parseJSON = genericParseJSON customOptionsLolly

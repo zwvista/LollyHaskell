@@ -30,7 +30,7 @@ data MLangWord = MLangWord
     } deriving (Show, Generic)
 makeLenses ''MLangWord
 
-data MLangWords = MLangWords { _fLANGWORDS :: [MLangWord] } deriving (Show, Generic)
+newtype MLangWords = MLangWords{_fLANGWORDS :: [MLangWord]} deriving (Show, Generic)
 
 instance ToJSON MLangWord where
     toJSON = genericToJSON customOptionsLolly

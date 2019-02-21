@@ -39,7 +39,7 @@ data MUnitPhrase = MUnitPhrase
     } deriving (Show, Generic)
 makeLenses ''MUnitPhrase
 
-data MUnitPhrases = MUnitPhrases { _fVUNITPHRASES :: [MUnitPhrase] } deriving (Show, Generic)
+newtype MUnitPhrases = MUnitPhrases{_fVUNITPHRASES :: [MUnitPhrase]} deriving (Show, Generic)
 
 instance ToJSON MUnitPhrase where
     toJSON = genericToJSON customOptionsLolly

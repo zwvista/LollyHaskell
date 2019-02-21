@@ -4,8 +4,8 @@ module Lib
 
 import Control.Lens
 import Data.List (find)
-import Models.MDictPicker
-import Models.MDictWord
+import Models.MDictGroup
+import Models.MDictMean
 import Text.Show.Unicode
 import ViewModels.SettingsViewModel
 
@@ -16,7 +16,7 @@ someFunc = do
     uprint $ vm ^. arrUserSettings ^?! ix (vm ^. selectedUSLangIndex)
     uprint $ vm ^. arrUserSettings ^?! ix (vm ^. selectedUSTextbookIndex)
     uprint $ selectedLang vm
-    uprint $ selectedDictPicker vm
-    uprint $ find (\o -> o ^. Models.MDictWord.fDICTNAME == selectedDictPicker vm ^. Models.MDictPicker.fDICTNAME) (vm ^. arrDictsWord) ^?! _Just
+    uprint $ selectedDictGroup vm
+    uprint $ find (\o -> o ^. Models.MDictMean.fDICTNAME == selectedDictGroup vm ^. Models.MDictGroup.fDICTNAME) (vm ^. arrDictsWord) ^?! _Just
     uprint $ selectedDictNote vm
     uprint $ selectedTextbook vm

@@ -15,7 +15,7 @@ module Models.MUserSetting
     , getDataByUser
     , updateLang
     , updateTextbook
-    , updateDictPicker
+    , updateDictGroup
     , updateDictNote
     , updateUnitFrom
     , updatePartFrom
@@ -45,7 +45,7 @@ data MUserSetting = MUserSetting
     } deriving (Show, Generic)
 makeLenses ''MUserSetting
 
-data MUserSettings = MUserSettings { _fUSERSETTINGS :: [MUserSetting] } deriving (Show, Generic)
+newtype MUserSettings = MUserSettings{_fUSERSETTINGS :: [MUserSetting]} deriving (Show, Generic)
 
 instance ToJSON MUserSetting where
     toJSON = genericToJSON customOptionsLolly
@@ -74,8 +74,8 @@ updateLang id langid = update id ("VALUE1=" ++ show langid)
 updateTextbook :: Int -> Int -> IO (Maybe String)
 updateTextbook id textbookid = update id ("VALUE1=" ++ show textbookid)
 
-updateDictPicker :: Int -> Int -> IO (Maybe String)
-updateDictPicker id dictpicker = update id ("VALUE2=" ++ show dictpicker)
+updateDictGroup :: Int -> Int -> IO (Maybe String)
+updateDictGroup id dictpicker = update id ("VALUE2=" ++ show dictpicker)
 
 updateDictNote :: Int -> Int -> IO (Maybe String)
 updateDictNote id dictnoteid = update id ("VALUE3=" ++ show dictnoteid)

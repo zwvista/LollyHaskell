@@ -45,7 +45,7 @@ fWORDNOTE w = w ^. fWORD <> case w ^. fNOTE of
     Just "" -> ""
     Just a -> "(" <> a <> ")"
 
-data MUnitWords = MUnitWords { _fVUNITWORDS :: [MUnitWord] } deriving (Show, Generic)
+newtype MUnitWords = MUnitWords{_fVUNITWORDS :: [MUnitWord]} deriving (Show, Generic)
 
 instance ToJSON MUnitWord where
     toJSON = genericToJSON customOptionsLolly

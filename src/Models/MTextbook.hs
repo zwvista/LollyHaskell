@@ -30,7 +30,7 @@ data MTextbook = MTextbook
     } deriving (Show, Generic)
 makeLenses ''MTextbook
 
-data MTextbooks = MTextbooks { _fTEXTBOOKS :: [MTextbook] } deriving (Show, Generic)
+newtype MTextbooks = MTextbooks{_fTEXTBOOKS :: [MTextbook]} deriving (Show, Generic)
 
 customOptions = aesonDrop 2 $ \case
     "TEXTBOOKNAME" -> "NAME"

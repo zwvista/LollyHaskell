@@ -2,8 +2,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Models.MDictPicker
-    ( MDictPicker(..)
+module Models.MDictGroup
+    ( MDictGroup(..)
     , fDICTID
     , fDICTNAME
     ) where
@@ -12,8 +12,8 @@ import Control.Lens
 import Data.Text (Text)
 import GHC.Generics
 
-data MDictPicker = MDictPicker
+data MDictGroup = MDictGroup
     { _fDICTID :: Text
     , _fDICTNAME :: Text
     } deriving (Show, Generic)
-makeLenses ''MDictPicker
+makeLenses ''MDictGroup

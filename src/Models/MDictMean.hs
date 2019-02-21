@@ -1,9 +1,8 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
 
-module Models.MDictWord
-    ( MDictWord
+module Models.MDictMean
+    ( MDictMean
     , fID
     , fDICTID
     , fLANGIDFROM
@@ -26,15 +25,15 @@ import Helpers
 import Models.MDictionary
 import Network.HTTP.Req
 
-type MDictWord = MDictionary
-data MDictsWord = MDictsWord { _fVDICTSWORD :: [MDictWord] } deriving (Show, Generic)
+type MDictMean = MDictionary
+newtype MDictsWord = MDictsWord{_fVDICTSMEAN :: [MDictMean]} deriving (Show, Generic)
 
 instance FromJSON MDictsWord where
     parseJSON = genericParseJSON customOptionsLolly
 
-getDataByLang :: Int -> IO [MDictWord]
+getDataByLang :: Int -> IO [MDictMean]
 getDataByLang langid = runReq def $ do
-    v <- req GET (urlLolly /: "VDICTSWORD") NoReqBody jsonResponse $
+    v <- req GET (urlLolly /: "VDICTSMEAN") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>
         "filter" =: ("LANGIDFROM,eq," ++ show langid)
-    return $ _fVDICTSWORD (responseBody v :: MDictsWord)
+    return $ _fVDICTSMEAN (responseBody v :: MDictsWord)

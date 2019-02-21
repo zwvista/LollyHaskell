@@ -38,7 +38,7 @@ instance ToJSON MAutoCorrect where
 instance FromJSON MAutoCorrect where
     parseJSON = genericParseJSON customOptionsLolly
 
-data MAutoCorrects = MAutoCorrects { _fAUTOCORRECT :: [MAutoCorrect] } deriving (Show, Generic)
+newtype MAutoCorrects = MAutoCorrects{_fAUTOCORRECT :: [MAutoCorrect]} deriving (Show, Generic)
 
 instance FromJSON MAutoCorrects where
     parseJSON = genericParseJSON customOptionsLolly

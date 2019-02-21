@@ -24,7 +24,7 @@ data MLanguage = MLanguage
     } deriving (Show, Generic)
 makeLenses ''MLanguage
 
-data MLanguages = MLanguages { _fLANGUAGES :: [MLanguage] } deriving (Show, Generic)
+newtype MLanguages = MLanguages{_fLANGUAGES :: [MLanguage]} deriving (Show, Generic)
 
 customOptions = aesonDrop 2 $ \case
     "LANGNAME" -> "NAME"

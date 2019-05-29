@@ -16,10 +16,8 @@ module Models.MDictMean
     , getDataByLang
     ) where
 
-import Control.Lens
 import Data.Aeson
 import Data.Default.Class
-import Data.Text (Text)
 import GHC.Generics
 import Helpers
 import Models.MDictionary

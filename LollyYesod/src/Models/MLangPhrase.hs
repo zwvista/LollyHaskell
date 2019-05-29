@@ -49,8 +49,8 @@ getDataByLang langid = runReq def $ do
     return $ _fLANGPHRASES (responseBody v :: MLangPhrases)
 
 update :: Int -> MLangPhrase -> IO (Maybe String)
-update id item = runReq def $ do
-    v <- req PUT (urlLolly /: "LANGPHRASES" /~ id) (ReqBodyJson item) jsonResponse mempty
+update fid item = runReq def $ do
+    v <- req PUT (urlLolly /: "LANGPHRASES" /~ fid) (ReqBodyJson item) jsonResponse mempty
     return (responseBody v :: Maybe String)
 
 create :: MLangPhrase -> IO (Maybe String)
@@ -59,6 +59,6 @@ create item = runReq def $ do
     return (responseBody v :: Maybe String)
 
 delete :: Int -> IO (Maybe String)
-delete id = runReq def $ do
-    v <- req DELETE (urlLolly /: "LANGPHRASES" /~ id) NoReqBody jsonResponse mempty
+delete fid = runReq def $ do
+    v <- req DELETE (urlLolly /: "LANGPHRASES" /~ fid) NoReqBody jsonResponse mempty
     return (responseBody v :: Maybe String)

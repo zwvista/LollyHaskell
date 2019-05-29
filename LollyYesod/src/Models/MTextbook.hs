@@ -32,6 +32,7 @@ makeLenses ''MTextbook
 
 newtype MTextbooks = MTextbooks{_fTEXTBOOKS :: [MTextbook]} deriving (Show, Generic)
 
+customOptions :: Options
 customOptions = aesonDrop 2 $ \case
     "TEXTBOOKNAME" -> "NAME"
     n -> n

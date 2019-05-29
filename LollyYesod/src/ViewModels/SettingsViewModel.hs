@@ -52,7 +52,6 @@ module ViewModels.SettingsViewModel
 
 import Control.Concurrent.Async
 import Control.Lens
-import Control.Monad
 import Data.Default.Class
 import Data.List
 import Data.Text (Text, splitOn)
@@ -90,12 +89,12 @@ makeLenses ''SettingsViewModel
 getUSXX :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> SettingsViewModel -> Maybe Text
 getUSXX fIndex fValue vm = vm ^. arrUserSettings ^?! ix (vm ^. fIndex) . fValue
 setUSXX :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> Text -> SettingsViewModel -> SettingsViewModel
-setUSXX fIndex fValue id vm = vm & arrUserSettings . ix (vm ^. fIndex) . fValue . _Just .~ id
+setUSXX fIndex fValue fid vm = vm & arrUserSettings . ix (vm ^. fIndex) . fValue . _Just .~ fid
 
 getUSXXID :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> SettingsViewModel -> Int
 getUSXXID fIndex fValue vm = vm ^. arrUserSettings ^?! ix (vm ^. fIndex) . fValue ^?! _Just . to decimal ^?! _Right . _1
 setUSXXID :: Lens' SettingsViewModel Int -> Lens' MUserSetting (Maybe Text) -> Int -> SettingsViewModel -> SettingsViewModel
-setUSXXID fIndex fValue id vm = vm & arrUserSettings . ix (vm ^. fIndex) . fValue . _Just .~ sformat int id
+setUSXXID fIndex fValue fid vm = vm & arrUserSettings . ix (vm ^. fIndex) . fValue . _Just .~ sformat int fid
 
 getUSLANGID :: SettingsViewModel -> Int
 getUSLANGID = getUSXXID selectedUSUserIndex fVALUE1

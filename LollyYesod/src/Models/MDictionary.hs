@@ -18,11 +18,9 @@ module Models.MDictionary
 
 import Control.Lens
 import Data.Aeson
-import Data.Default.Class
 import Data.Text (Text)
 import GHC.Generics
 import Helpers
-import Network.HTTP.Req
 
 data MDictionary = MDictionary
     { _fID :: Int

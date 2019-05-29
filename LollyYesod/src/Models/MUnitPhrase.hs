@@ -61,8 +61,8 @@ getDataByTextbookUnitPart textbookid unitPartFrom unitPartTo = runReq def $ do
     return $ _fVUNITPHRASES (responseBody v :: MUnitPhrases)
 
 update :: Int -> MUnitPhrase -> IO (Maybe String)
-update id item = runReq def $ do
-    v <- req PUT (urlLolly /: "UNITPHRASES" /~ id) (ReqBodyJson item) jsonResponse mempty
+update fid item = runReq def $ do
+    v <- req PUT (urlLolly /: "UNITPHRASES" /~ fid) (ReqBodyJson item) jsonResponse mempty
     return (responseBody v :: Maybe String)
 
 create :: MUnitPhrase -> IO (Maybe String)
@@ -71,6 +71,6 @@ create item = runReq def $ do
     return (responseBody v :: Maybe String)
 
 delete :: Int -> IO (Maybe String)
-delete id = runReq def $ do
-    v <- req DELETE (urlLolly /: "UNITPHRASES" /~ id) NoReqBody jsonResponse mempty
+delete fid = runReq def $ do
+    v <- req DELETE (urlLolly /: "UNITPHRASES" /~ fid) NoReqBody jsonResponse mempty
     return (responseBody v :: Maybe String)

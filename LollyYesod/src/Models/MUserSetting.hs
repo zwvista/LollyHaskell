@@ -64,30 +64,30 @@ getDataByUser userid = runReq def $ do
     return $ _fUSERSETTINGS (responseBody v :: MUserSettings)
 
 update :: Int -> String -> IO (Maybe String)
-update id str = runReq def $ do
-    v <- req PUT (urlLolly /: "USERSETTINGS" /~ id) (ReqBodyLbs (B.fromString str)) jsonResponse mempty
+update fid str = runReq def $ do
+    v <- req PUT (urlLolly /: "USERSETTINGS" /~ fid) (ReqBodyLbs (B.fromString str)) jsonResponse mempty
     return (responseBody v :: Maybe String)
 
 updateLang :: Int -> Int -> IO (Maybe String)
-updateLang id langid = update id ("VALUE1=" ++ show langid)
+updateLang fid langid = update fid ("VALUE1=" ++ show langid)
 
 updateTextbook :: Int -> Int -> IO (Maybe String)
-updateTextbook id textbookid = update id ("VALUE1=" ++ show textbookid)
+updateTextbook fid textbookid = update fid ("VALUE1=" ++ show textbookid)
 
 updateDictGroup :: Int -> Int -> IO (Maybe String)
-updateDictGroup id dictpicker = update id ("VALUE2=" ++ show dictpicker)
+updateDictGroup fid dictpicker = update fid ("VALUE2=" ++ show dictpicker)
 
 updateDictNote :: Int -> Int -> IO (Maybe String)
-updateDictNote id dictnoteid = update id ("VALUE3=" ++ show dictnoteid)
+updateDictNote fid dictnoteid = update fid ("VALUE3=" ++ show dictnoteid)
 
 updateUnitFrom :: Int -> Int -> IO (Maybe String)
-updateUnitFrom id usunitfrom = update id ("VALUE1=" ++ show usunitfrom)
+updateUnitFrom fid usunitfrom = update fid ("VALUE1=" ++ show usunitfrom)
 
 updatePartFrom :: Int -> Int -> IO (Maybe String)
-updatePartFrom id uspartfrom = update id ("VALUE2=" ++ show uspartfrom)
+updatePartFrom fid uspartfrom = update fid ("VALUE2=" ++ show uspartfrom)
 
 updateUnitTo :: Int -> Int -> IO (Maybe String)
-updateUnitTo id usunitto = update id ("VALUE3=" ++ show usunitto)
+updateUnitTo fid usunitto = update fid ("VALUE3=" ++ show usunitto)
 
 updatePartTo :: Int -> Int -> IO (Maybe String)
-updatePartTo id uspartto = update id ("VALUE4=" ++ show uspartto)
+updatePartTo fid uspartto = update fid ("VALUE4=" ++ show uspartto)

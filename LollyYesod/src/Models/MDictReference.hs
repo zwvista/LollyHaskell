@@ -1,8 +1,8 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 
-module Models.MDictMean
-    ( MDictMean
+module Models.MDictReference
+    ( MDictReference
     , fID
     , fDICTID
     , fLANGIDFROM
@@ -23,13 +23,13 @@ import Helpers
 import Models.MDictionary
 import Network.HTTP.Req
 
-type MDictMean = MDictionary
-newtype MDictsWord = MDictsWord{_fVDICTSMEAN :: [MDictMean]} deriving (Show, Generic)
+type MDictReference = MDictionary
+newtype MDictsWord = MDictsWord{_fVDICTSMEAN :: [MDictReference]} deriving (Show, Generic)
 
 instance FromJSON MDictsWord where
     parseJSON = genericParseJSON customOptionsLolly
 
-getDataByLang :: Int -> IO [MDictMean]
+getDataByLang :: Int -> IO [MDictReference]
 getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSMEAN") NoReqBody jsonResponse $
         "transform" =: (1 :: Int) <>

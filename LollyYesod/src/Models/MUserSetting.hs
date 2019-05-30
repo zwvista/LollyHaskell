@@ -15,7 +15,7 @@ module Models.MUserSetting
     , getDataByUser
     , updateLang
     , updateTextbook
-    , updateDictGroup
+    , updateDictItem
     , updateDictNote
     , updateUnitFrom
     , updatePartFrom
@@ -74,8 +74,8 @@ updateLang fid langid = update fid ("VALUE1=" ++ show langid)
 updateTextbook :: Int -> Int -> IO (Maybe String)
 updateTextbook fid textbookid = update fid ("VALUE1=" ++ show textbookid)
 
-updateDictGroup :: Int -> Int -> IO (Maybe String)
-updateDictGroup fid dictpicker = update fid ("VALUE2=" ++ show dictpicker)
+updateDictItem :: Int -> Int -> IO (Maybe String)
+updateDictItem fid dictpicker = update fid ("VALUE2=" ++ show dictpicker)
 
 updateDictNote :: Int -> Int -> IO (Maybe String)
 updateDictNote fid dictnoteid = update fid ("VALUE3=" ++ show dictnoteid)

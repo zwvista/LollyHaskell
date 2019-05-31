@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -27,7 +28,7 @@ data MTextbook = MTextbook
     , _fTEXTBOOKNAME :: Text
     , _fUNITS :: Int
     , _fPARTS :: Text
-    } deriving (Show, Generic)
+    } deriving (Show, Generic, Default)
 makeLenses ''MTextbook
 
 newtype MTextbooks = MTextbooks{_fTEXTBOOKS :: [MTextbook]} deriving (Show, Generic)

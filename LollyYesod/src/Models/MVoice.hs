@@ -3,10 +3,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Models.MDictItem
-    ( MDictItem(..)
-    , fDICTID
-    , fDICTNAME
+module Models.MVoice
+    ( MVoice(..)
+    , fID
+    , fLANGID
+    , fVOICETYPEID
+    , fVOICELANG
+    , fVOICENAME
     ) where
 
 import Control.Lens
@@ -15,8 +18,11 @@ import Data.Text (Text)
 import GHC.Generics (Generic)
 import Helpers
 
-data MDictItem = MDictItem
-    { _fDICTID :: Text
-    , _fDICTNAME :: Text
+data MVoice = MVoice
+    { _fID :: Int
+    , _fLANGID :: Int
+    , _fVOICETYPEID :: Int
+    , _fVOICELANG :: Maybe Text
+    , _fVOICENAME :: Text
     } deriving (Show, Generic, Default)
-makeLenses ''MDictItem
+makeLenses ''MVoice

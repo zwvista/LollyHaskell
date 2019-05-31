@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -42,7 +43,7 @@ data MUserSetting = MUserSetting
     , _fVALUE2 :: Maybe Text
     , _fVALUE3 :: Maybe Text
     , _fVALUE4 :: Maybe Text
-    } deriving (Show, Generic)
+    } deriving (Show, Generic, Default)
 makeLenses ''MUserSetting
 
 newtype MUserSettings = MUserSettings{_fUSERSETTINGS :: [MUserSetting]} deriving (Show, Generic)

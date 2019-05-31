@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -21,7 +22,7 @@ import Network.HTTP.Req
 data MLanguage = MLanguage
     { _fID :: Int
     , _fLANGNAME :: Text
-    } deriving (Show, Generic)
+    } deriving (Show, Generic, Default)
 makeLenses ''MLanguage
 
 newtype MLanguages = MLanguages{_fLANGUAGES :: [MLanguage]} deriving (Show, Generic)

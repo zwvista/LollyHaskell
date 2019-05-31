@@ -3,10 +3,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 
-module Models.MDictItem
-    ( MDictItem(..)
-    , fDICTID
-    , fDICTNAME
+module Models.MSelectItem
+    ( MSelectItem(..)
+    , value
+    , label
     ) where
 
 import Control.Lens
@@ -15,8 +15,8 @@ import Data.Text (Text)
 import GHC.Generics (Generic)
 import Helpers
 
-data MDictItem = MDictItem
-    { _fDICTID :: Text
-    , _fDICTNAME :: Text
+data MSelectItem = MSelectItem
+    { _value :: Int
+    , _label :: Text
     } deriving (Show, Generic, Default)
-makeLenses ''MDictItem
+makeLenses ''MSelectItem

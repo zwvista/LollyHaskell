@@ -15,24 +15,35 @@ module ViewModels.SettingsViewModel
     , selectedUSLang4
     , selectedUSTextbook
     , arrLanguages
-    , selectedLangIndex
-    , arrDictsWord
-    , arrDictsGroup
-    , selectedDictItemIndex
+    , selectedLang
+    , arrDictsReference
+    , arrDictItems
+    , selectedDictItem
     , arrDictsNote
-    , selectedDictNoteIndex
+    , selectedDictNote
+    , arrDictsTranslation
+    , selectedDictTranslation
     , arrTextbooks
-    , selectedTextbookIndex
+    , selectedTextbook
     , arrUnits
     , arrParts
+    , arrAutoCorrect
     , getUSLANGID
     , setUSLANGID
+    , getUSROWSPERPAGEOPTIONS
+    , getUSROWSPERPAGE
+    , getUSREADINTERVAL
+    , getUSREVIEWINTERVAL
     , getUSTEXTBOOKID
     , setUSTEXTBOOKID
-    , getUSDICTGROUP
-    , setUSDICTGROUP
     , getUSDICTNOTEID
     , setUSDICTNOTEID
+    , getUSDICTITEMS
+    , setUSDICTITEMS
+    , getUSDICTTRANSLATIONID
+    , setUSDICTTRANSLATIONID
+    , getUSVOICEID
+    , setUSVOICEID
     , getUSUNITFROM
     , setUSUNITFROM
     , getUSPARTFROM
@@ -44,20 +55,17 @@ module ViewModels.SettingsViewModel
     , getUSUNITPARTFROM
     , getUSUNITPARTTO
     , isSingleUnitPart
+    , isSingleUnit
     , isInvalidUnitPart
-    , selectedLang
-    , selectedDictItem
-    , selectedDictNote
-    , selectedTextbook
     , ViewModels.SettingsViewModel.getData
-    , setSelectedTextbookIndex
+    , setSelectedTextbook
     ) where
 
 import Control.Concurrent.Async
 import Control.Lens
 import Data.Default.Class
 import Data.List
-import Data.Map
+import Data.Map (Map, fromList)
 import Data.Text (Text, splitOn)
 import Data.Text.Read
 import Formatting
@@ -66,9 +74,11 @@ import Models.MAutoCorrect
 import Models.MDictItem
 import Models.MDictNote
 import Models.MDictReference
+import Models.MDictTranslation
 import Models.MLanguage
 import Models.MTextbook
 import Models.MUserSetting
+import Models.MVoice
 
 data SettingsViewModel = SettingsViewModel
     { _arrUserSettings :: [MUserSetting]
@@ -78,14 +88,17 @@ data SettingsViewModel = SettingsViewModel
     , _selectedUSLang2 :: MUserSetting
     , _selectedUSLang3 :: MUserSetting
     , _selectedUSLang4 :: MUserSetting
-    , _selectedUSTextbook :: MTextbook
+    , _selectedUSTextbook :: MUserSetting
     , _arrLanguages :: [MLanguage]
     , _selectedLang :: MLanguage
+    , _voices :: [MVoice]
     , _arrDictsReference :: [MDictReference]
     , _arrDictItems :: [MDictItem]
     , _selectedDictItem :: MDictItem
     , _arrDictsNote :: [MDictNote]
-    , _selectedDictNote :: MDictNote
+    , _selectedDictNote :: Maybe MDictNote
+    , _arrDictsTranslation :: [MDictTranslation]
+    , _selectedDictTranslation :: Maybe MDictTranslation
     , _arrTextbooks :: [MTextbook]
     , _selectedTextbook :: MTextbook
     , _arrUnits :: [Text]
@@ -105,7 +118,7 @@ setUSXXID :: Lens' SettingsViewModel MUserSetting -> Lens' MUserSetting (Maybe T
 setUSXXID fUserSetting fValue vid vm = vm & fUserSetting . fValue . _Just .~ sformat int vid
 
 getUSLANGID :: SettingsViewModel -> Int
-getUSLANGID = getUSXXID selectedUSUser0 fVALUE1 ^?! _Just
+getUSLANGID vm = getUSXXID selectedUSUser0 fVALUE1 vm ^?! _Just
 setUSLANGID :: Int -> SettingsViewModel -> SettingsViewModel
 setUSLANGID = setUSXXID selectedUSUser0 fVALUE1
 
@@ -121,8 +134,8 @@ getUSREADINTERVAL = getUSXXID selectedUSUser1 fVALUE1
 getUSREVIEWINTERVAL :: SettingsViewModel -> Maybe Int
 getUSREVIEWINTERVAL = getUSXXID selectedUSUser1 fVALUE2
 
-getUSTEXTBOOKID :: SettingsViewModel -> Maybe Int
-getUSTEXTBOOKID = getUSXXID selectedUSLang2 fVALUE1
+getUSTEXTBOOKID :: SettingsViewModel -> Int
+getUSTEXTBOOKID vm = getUSXXID selectedUSLang2 fVALUE1 vm ^?! _Just
 setUSTEXTBOOKID :: Int -> SettingsViewModel -> SettingsViewModel
 setUSTEXTBOOKID = setUSXXID selectedUSLang2 fVALUE1
 
@@ -132,7 +145,7 @@ setUSDICTITEM :: Text -> SettingsViewModel -> SettingsViewModel
 setUSDICTITEM = setUSXX selectedUSLang2 fVALUE2
 
 getUSDICTNOTEID :: SettingsViewModel -> Int
-getUSDICTNOTEID = getUSXXID selectedUSLang2 fVALUE3 ^. non 0
+getUSDICTNOTEID vm = getUSXXID selectedUSLang2 fVALUE3 vm ^. non 0
 setUSDICTNOTEID :: Int -> SettingsViewModel -> SettingsViewModel
 setUSDICTNOTEID = setUSXXID selectedUSLang2 fVALUE3
 
@@ -142,32 +155,32 @@ setUSDICTITEMS :: Text -> SettingsViewModel -> SettingsViewModel
 setUSDICTITEMS = setUSXX selectedUSLang2 fVALUE4
 
 getUSDICTTRANSLATIONID :: SettingsViewModel -> Int
-getUSDICTTRANSLATIONID = getUSXXID selectedUSLang3 fVALUE1 ^. non 0
+getUSDICTTRANSLATIONID vm = getUSXXID selectedUSLang3 fVALUE1 vm ^. non 0
 setUSDICTTRANSLATIONID :: Int -> SettingsViewModel -> SettingsViewModel
 setUSDICTTRANSLATIONID = setUSXXID selectedUSLang3 fVALUE1
 
 getUSVOICEID :: SettingsViewModel -> Int
-getUSVOICEID = getUSXXID selectedUSLang4 fVALUE1 ^. non 0
+getUSVOICEID vm = getUSXXID selectedUSLang4 fVALUE1 vm ^. non 0
 setUSVOICEID :: Int -> SettingsViewModel -> SettingsViewModel
 setUSVOICEID = setUSXXID selectedUSLang4 fVALUE1
 
 getUSUNITFROM :: SettingsViewModel -> Int
-getUSUNITFROM = getUSXXID selectedUSTextbook fVALUE1 ^. non 1
+getUSUNITFROM vm = getUSXXID selectedUSTextbook fVALUE1 vm ^. non 1
 setUSUNITFROM :: Int -> SettingsViewModel -> SettingsViewModel
 setUSUNITFROM = setUSXXID selectedUSTextbook fVALUE1
 
 getUSPARTFROM :: SettingsViewModel -> Int
-getUSPARTFROM = getUSXXID selectedUSTextbook fVALUE2 ^. non 1
+getUSPARTFROM vm = getUSXXID selectedUSTextbook fVALUE2 vm ^. non 1
 setUSPARTFROM :: Int -> SettingsViewModel -> SettingsViewModel
 setUSPARTFROM = setUSXXID selectedUSTextbook fVALUE2
 
 getUSUNITTO :: SettingsViewModel -> Int
-getUSUNITTO = getUSXXID selectedUSTextbook fVALUE3 ^. non 1
+getUSUNITTO vm = getUSXXID selectedUSTextbook fVALUE3 vm ^. non 1
 setUSUNITTO :: Int -> SettingsViewModel -> SettingsViewModel
 setUSUNITTO = setUSXXID selectedUSTextbook fVALUE3
 
 getUSPARTTO :: SettingsViewModel -> Int
-getUSPARTTO = getUSXXID selectedUSTextbook fVALUE4 ^. non 1
+getUSPARTTO vm = getUSXXID selectedUSTextbook fVALUE4 vm ^. non 1
 setUSPARTTO :: Int -> SettingsViewModel -> SettingsViewModel
 setUSPARTTO = setUSXXID selectedUSTextbook fVALUE4
 
@@ -180,19 +193,21 @@ getUSUNITPARTTO vm = getUSUNITTO vm * 10 + getUSPARTTO vm
 isSingleUnitPart :: SettingsViewModel -> Bool
 isSingleUnitPart vm = getUSUNITPARTFROM vm == getUSUNITPARTTO vm
 
+isSingleUnit :: SettingsViewModel -> Bool
+isSingleUnit vm = getUSUNITFROM vm == getUSUNITTO vm && getUSPARTFROM vm == 1 && getUSPARTTO vm == 3
+
 isInvalidUnitPart :: SettingsViewModel -> Bool
 isInvalidUnitPart vm = getUSUNITPARTFROM vm > getUSUNITPARTTO vm
 
 getData :: IO SettingsViewModel
 getData = do
     (r1, r2) <- concurrently Models.MLanguage.getData (Models.MUserSetting.getDataByUser 1)
-    let vm =
-            (def :: SettingsViewModel) & arrLanguages .~ r1 & arrUserSettings .~ r2 &
-            selectedUSUser0 .~ find (\o -> o ^. fKIND == 1 && o ^. fENTITYID == 0) r2 &
-            selectedUSUser1 .~ find (\o -> o ^. fKIND == 1 && o ^. fENTITYID == 1) r2
+    let vm = (def :: SettingsViewModel) & arrLanguages .~ r1 & arrUserSettings .~ r2
+            & selectedUSUser0 .~ find (\o -> o ^. fKIND == 1 && o ^. fENTITYID == 0) r2 ^?! _Just
+            & selectedUSUser1 .~ find (\o -> o ^. fKIND == 1 && o ^. fENTITYID == 1) r2 ^?! _Just
         arr = vm ^. selectedUSUser0 . fVALUE4 ^?! _Just & splitOn "\r\n" <&> splitOn "," <&> (\x -> (head x, tail x))
         vm2 = vm & fUSLEVELCOLORS .~ fromList arr
-    setSelectedLang (find (\o -> o ^. Models.MLanguage.fID == getUSLANGID vm2) r1) vm2
+    setSelectedLang (find (\o -> o ^. Models.MLanguage.fID == getUSLANGID vm2) r1 ^?! _Just) vm2
 
 computeDictItem :: [MDictReference] -> ([MDictItem], Int) -> Text -> ([MDictItem], Int)
 computeDictItem arr (lst, i) d
@@ -203,33 +218,30 @@ setSelectedLang :: MLanguage -> SettingsViewModel -> IO SettingsViewModel
 setSelectedLang lang vm = do
     let langid = lang ^. Models.MLanguage.fID
         vm2 = vm & selectedLang .~ lang & setUSLANGID langid
-            & selectedUSLang2 .~ find (\o -> o ^. fKIND == 2 && o ^. fENTITYID == langid) arrUserSettings
-            & selectedUSLang3 .~ find (\o -> o ^. fKIND == 3 && o ^. fENTITYID == langid) arrUserSettings
-            & selectedUSLang4 .~ find (\o -> o ^. fKIND == 4 && o ^. fENTITYID == langid) arrUserSettings
-        dicts = vm2 & getUSDICTSGROUP & splitOn "\r\n"
-    (r1, r2, r3, r4) <-
-        runConcurrently $ (,,,) <$>
+            & selectedUSLang2 .~ find (\o -> o ^. fKIND == 2 && o ^. fENTITYID == langid) (vm ^. arrUserSettings) ^?! _Just
+            & selectedUSLang3 .~ find (\o -> o ^. fKIND == 3 && o ^. fENTITYID == langid) (vm ^. arrUserSettings) ^?! _Just
+            & selectedUSLang4 .~ find (\o -> o ^. fKIND == 4 && o ^. fENTITYID == langid) (vm ^. arrUserSettings) ^?! _Just
+        dicts = vm2 & getUSDICTITEMS & splitOn "\r\n"
+    (r1, r2, r3, r4, r5) <-
+        runConcurrently $ (,,,,) <$>
         Concurrently (Models.MDictReference.getDataByLang langid) <*>
         Concurrently (Models.MDictNote.getDataByLang langid) <*>
+        Concurrently (Models.MDictTranslation.getDataByLang langid) <*>
         Concurrently (Models.MTextbook.getDataByLang langid) <*>
         Concurrently (Models.MAutoCorrect.getDataByLang langid)
-    let vm4 = vm3 & arrDictsWord .~ r1 & arrDictsGroup .~ (foldl (computeDictItem r1) ([], 1) dicts ^. _1)
-        vm5 =
-            vm4 &
-            selectedDictItemIndex .~
-            (findIndex (\o -> o ^. Models.MDictItem.fDICTID == getUSDICTGROUP vm4) (vm4 ^. arrDictsGroup) ^. non (-1)) &
-            arrDictsNote .~ r2 &
-            selectedDictNoteIndex .~ (findIndex (\o -> o ^. Models.MDictNote.fID == getUSDICTNOTEID vm4) r2 ^. non (-1)) &
-            arrTextbooks .~ r3 &
-            arrAutoCorrect .~ r4
+    let vm3 = vm2 & arrDictsReference .~ r1
+            & arrDictItems .~ (foldl (computeDictItem r1) ([], 1) dicts ^. _1)
+            & arrDictsNote .~ r2 & arrDictsTranslation .~ r3 & arrTextbooks .~ r4 & arrAutoCorrect .~ r5
+        vm4 = vm3
+            & selectedDictItem .~ find (\o -> o ^. Models.MDictItem.fDICTID == getUSDICTITEMS vm3) (vm3 ^. arrDictItems) ^?! _Just
+            & selectedDictNote .~ find (\o -> o ^. Models.MDictNote.fID == getUSDICTNOTEID vm4) r2
+            & selectedDictTranslation .~ find (\o -> o ^. Models.MDictTranslation.fID == getUSDICTTRANSLATIONID vm4) r2
     return $
-        setSelectedTextbookIndex (findIndex (\o -> o ^. Models.MTextbook.fID == getUSTEXTBOOKID vm5) r3 ^. non (-1)) vm5
+        setSelectedTextbook (find (\o -> o ^. Models.MTextbook.fID == getUSTEXTBOOKID vm4) r4 ^?! _Just) vm4
 
 setSelectedTextbook :: MTextbook -> SettingsViewModel -> SettingsViewModel
 setSelectedTextbook textbook vm =
     let vm2 = vm & selectedTextbook .~ textbook
-        textbookid = selectedTextbook vm2 ^. Models.MTextbook.fID
+        textbookid = vm2 ^. selectedTextbook . Models.MTextbook.fID
     in vm2 & setUSTEXTBOOKID textbookid
-        & selectedUSTextbookIndex .~ (findIndex (\o -> o ^. fKIND == 3 && o ^. fENTITYID == textbookid) (vm2 ^.arrUserSettings) ^. non (-1))
-        & arrUnits .~ ([1..(selectedTextbook vm2 ^. fUNITS)] <&> sformat int)
-        & arrParts .~ (selectedTextbook vm2 ^. fPARTS & splitOn " ")
+        & selectedUSTextbook .~ find (\o -> o ^. fKIND == 11 && o ^. fENTITYID == textbookid) (vm2 ^.arrUserSettings) ^?! _Just

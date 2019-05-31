@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -27,6 +28,7 @@ module Models.MDictionary
 
 import Control.Lens
 import Data.Aeson
+import Data.Default.Class
 import Data.Text (Text)
 import GHC.Generics
 import Helpers
@@ -51,7 +53,7 @@ data MDictionary = MDictionary
     , _fWAIT :: Maybe Int
     , _fTEMPLATE :: Maybe Text
     , _fTEMPLATE2 :: Maybe Text
-    } deriving (Show, Generic)
+    } deriving (Show, Generic, Default)
 makeLenses ''MDictionary
 
 instance ToJSON MDictionary where

@@ -27,7 +27,7 @@ module Models.MUserSetting
 import Control.Lens
 import Data.Aeson
 import qualified Data.ByteString.Lazy.UTF8 as B
-import Data.Default.Class
+import Data.Default
 import Data.Text (Text)
 import GHC.Generics
 import Helpers

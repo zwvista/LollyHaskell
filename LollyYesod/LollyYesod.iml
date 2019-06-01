@@ -236,5 +236,12 @@
     <orderEntry type="library" name="network-byte-order-0.0.0.0" level="project" />
     <orderEntry type="library" name="optparse-applicative-0.14.3.0" level="project" />
     <orderEntry type="library" name="StateVar-1.1.1.1" level="project" />
+    <orderEntry type="library" name="data-default-extra-0.1.0" level="project" />
+    <orderEntry type="library" name="data-default-instances-new-base-0.0.2" level="project" />
+    <orderEntry type="library" name="data-default-instances-bytestring-0.0.1" level="project" />
+    <orderEntry type="library" name="data-default-instances-case-insensitive-0.0.1" level="project" />
+    <orderEntry type="library" name="data-default-instances-text-0.0.1" level="project" />
+    <orderEntry type="library" name="data-default-instances-unordered-containers-0.0.1" level="project" />
+    <orderEntry type="library" name="data-default-instances-vector-0.0.1" level="project" />
   </component>
 </module>

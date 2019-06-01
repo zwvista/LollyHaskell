@@ -13,10 +13,9 @@ module Models.MVoice
     ) where
 
 import Control.Lens
-import Data.Default.Class
+import Data.Default
 import Data.Text (Text)
 import GHC.Generics (Generic)
-import Helpers
 
 data MVoice = MVoice
     { _fID :: Int

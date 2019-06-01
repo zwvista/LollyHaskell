@@ -10,10 +10,9 @@ module Models.MDictItem
     ) where
 
 import Control.Lens
-import Data.Default.Class
+import Data.Default
 import Data.Text (Text)
 import GHC.Generics (Generic)
-import Helpers
 
 data MDictItem = MDictItem
     { _fDICTID :: Text

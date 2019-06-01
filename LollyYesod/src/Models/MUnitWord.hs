@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -12,6 +13,7 @@ module Models.MUnitWord
     , fSEQNUM
     , fWORD
     , fNOTE
+    , fWORDNOTE
     , getDataByTextbookUnitPart
     , update
     , create
@@ -20,7 +22,7 @@ module Models.MUnitWord
 
 import Control.Lens
 import Data.Aeson
-import Data.Default.Class
+import Data.Default
 import Data.Text (Text)
 import GHC.Generics
 import Helpers
@@ -36,7 +38,7 @@ data MUnitWord = MUnitWord
     , _fSEQNUM :: Int
     , _fWORD :: Text
     , _fNOTE :: Maybe Text
-    } deriving (Show, Generic)
+    } deriving (Show, Generic, Default)
 makeLenses ''MUnitWord
 
 fWORDNOTE :: MUnitWord -> Text

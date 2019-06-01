@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
@@ -16,7 +17,7 @@ module Models.MLangWord
 
 import Control.Lens
 import Data.Aeson
-import Data.Default.Class
+import Data.Default
 import Data.Text (Text)
 import GHC.Generics
 import Helpers
@@ -27,7 +28,7 @@ data MLangWord = MLangWord
     , _fLANGID :: Int
     , _fWORD :: Text
     , _fTRANSLATION :: Text
-    } deriving (Show, Generic)
+    } deriving (Show, Generic, Default)
 makeLenses ''MLangWord
 
 newtype MLangWords = MLangWords{_fLANGWORDS :: [MLangWord]} deriving (Show, Generic)

@@ -10,10 +10,9 @@ module Models.MSelectItem
     ) where
 
 import Control.Lens
-import Data.Default.Class
+import Data.Default
 import Data.Text (Text)
 import GHC.Generics (Generic)
-import Helpers
 
 data MSelectItem = MSelectItem
     { _value :: Int

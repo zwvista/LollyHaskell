@@ -16,6 +16,7 @@ module ViewModels.SettingsViewModel
     , selectedUSTextbook
     , arrLanguages
     , selectedLang
+    , voices
     , arrDictsReference
     , arrDictItems
     , selectedDictItem
@@ -34,6 +35,8 @@ module ViewModels.SettingsViewModel
     , getUSROWSPERPAGE
     , getUSREADINTERVAL
     , getUSREVIEWINTERVAL
+    , getUSDICTITEM
+    , setUSDICTITEM
     , getUSTEXTBOOKID
     , setUSTEXTBOOKID
     , getUSDICTNOTEID
@@ -234,8 +237,8 @@ setSelectedLang lang vm = do
             & arrDictsNote .~ r2 & arrDictsTranslation .~ r3 & arrTextbooks .~ r4 & arrAutoCorrect .~ r5
         vm4 = vm3
             & selectedDictItem .~ find (\o -> o ^. Models.MDictItem.fDICTID == getUSDICTITEMS vm3) (vm3 ^. arrDictItems) ^?! _Just
-            & selectedDictNote .~ find (\o -> o ^. Models.MDictNote.fID == getUSDICTNOTEID vm4) r2
-            & selectedDictTranslation .~ find (\o -> o ^. Models.MDictTranslation.fID == getUSDICTTRANSLATIONID vm4) r2
+            & selectedDictNote .~ find (\o -> o ^. Models.MDictNote.fID == getUSDICTNOTEID vm3) r2
+            & selectedDictTranslation .~ find (\o -> o ^. Models.MDictTranslation.fID == getUSDICTTRANSLATIONID vm3) r2
     return $
         setSelectedTextbook (find (\o -> o ^. Models.MTextbook.fID == getUSTEXTBOOKID vm4) r4 ^?! _Just) vm4
 

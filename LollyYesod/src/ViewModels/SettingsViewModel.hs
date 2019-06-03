@@ -16,18 +16,27 @@ module ViewModels.SettingsViewModel
     , selectedUSTextbook
     , arrLanguages
     , selectedLang
+    , setSelectedLang
     , voices
+    , selectedVoice
+    , setSelectedVoice
     , arrDictsReference
     , arrDictItems
     , selectedDictItem
+    , setSelectedDictItem
     , arrDictsNote
     , selectedDictNote
+    , setSelectedDictNote
     , arrDictsTranslation
     , selectedDictTranslation
+    , setSelectedDictTranslation
     , arrTextbooks
     , selectedTextbook
+    , setSelectedTextbook
     , arrUnits
+    , getUnitCount
     , arrParts
+    , getPartCount
     , arrAutoCorrect
     , getUSLANGID
     , setUSLANGID
@@ -61,7 +70,6 @@ module ViewModels.SettingsViewModel
     , isSingleUnit
     , isInvalidUnitPart
     , ViewModels.SettingsViewModel.getData
-    , setSelectedTextbook
     ) where
 
 import Control.Concurrent.Async
@@ -95,6 +103,7 @@ data SettingsViewModel = SettingsViewModel
     , _arrLanguages :: [MLanguage]
     , _selectedLang :: MLanguage
     , _voices :: [MVoice]
+    , _selectedVoice :: Maybe MVoice
     , _arrDictsReference :: [MDictReference]
     , _arrDictItems :: [MDictItem]
     , _selectedDictItem :: MDictItem
@@ -197,10 +206,38 @@ isSingleUnitPart :: SettingsViewModel -> Bool
 isSingleUnitPart vm = getUSUNITPARTFROM vm == getUSUNITPARTTO vm
 
 isSingleUnit :: SettingsViewModel -> Bool
-isSingleUnit vm = getUSUNITFROM vm == getUSUNITTO vm && getUSPARTFROM vm == 1 && getUSPARTTO vm == 3
+isSingleUnit vm = getUSUNITFROM vm == getUSUNITTO vm && getUSPARTFROM vm == 1 && getUSPARTTO vm == getPartCount vm
 
 isInvalidUnitPart :: SettingsViewModel -> Bool
 isInvalidUnitPart vm = getUSUNITPARTFROM vm > getUSUNITPARTTO vm
+
+setSelectedVoice :: MVoice -> SettingsViewModel -> SettingsViewModel
+setSelectedVoice v vm = vm & selectedVoice . _Just .~ v
+    & setUSVOICEID (v ^. Models.MVoice.fID)
+
+setSelectedDictItem :: MDictItem -> SettingsViewModel -> SettingsViewModel
+setSelectedDictItem v vm = vm & selectedDictItem .~ v
+    & setUSDICTITEM (v ^. Models.MDictItem.fDICTID)
+
+setSelectedDictNote :: MDictNote -> SettingsViewModel -> SettingsViewModel
+setSelectedDictNote v vm = vm & selectedDictNote . _Just .~ v
+    & setUSDICTNOTEID (v ^. Models.MDictNote.fID)
+
+setSelectedDictTranslation :: MDictTranslation -> SettingsViewModel -> SettingsViewModel
+setSelectedDictTranslation v vm = vm & selectedDictTranslation . _Just .~ v
+    & setUSDICTTRANSLATIONID (v ^. Models.MDictTranslation.fID)
+
+setSelectedTextbook :: MTextbook -> SettingsViewModel -> SettingsViewModel
+setSelectedTextbook v vm =
+    let textbookid = v ^. Models.MTextbook.fID
+    in vm & selectedTextbook .~ v & setUSTEXTBOOKID textbookid
+        & selectedUSTextbook .~ find (\o -> o ^. fKIND == 11 && o ^. fENTITYID == textbookid) (vm ^.arrUserSettings) ^?! _Just
+
+getUnitCount :: SettingsViewModel -> Int
+getUnitCount vm = vm ^. arrUnits & length
+
+getPartCount :: SettingsViewModel -> Int
+getPartCount vm = vm ^. arrParts & length
 
 getData :: IO SettingsViewModel
 getData = do
@@ -241,10 +278,3 @@ setSelectedLang lang vm = do
             & selectedDictTranslation .~ find (\o -> o ^. Models.MDictTranslation.fID == getUSDICTTRANSLATIONID vm3) r2
     return $
         setSelectedTextbook (find (\o -> o ^. Models.MTextbook.fID == getUSTEXTBOOKID vm4) r4 ^?! _Just) vm4
-
-setSelectedTextbook :: MTextbook -> SettingsViewModel -> SettingsViewModel
-setSelectedTextbook textbook vm =
-    let vm2 = vm & selectedTextbook .~ textbook
-        textbookid = vm2 ^. selectedTextbook . Models.MTextbook.fID
-    in vm2 & setUSTEXTBOOKID textbookid
-        & selectedUSTextbook .~ find (\o -> o ^. fKIND == 11 && o ^. fENTITYID == textbookid) (vm2 ^.arrUserSettings) ^?! _Just

@@ -33,7 +33,7 @@ import Models.MDictionary
 import Network.HTTP.Req
 
 type MDictNote = MDictionary
-newtype MDictsNote = MDictsNote{_fVDICTSNOTE :: [MDictNote]} deriving (Show, Generic)
+newtype MDictsNote = MDictsNote{_frecords :: [MDictNote]} deriving (Show, Generic)
 
 instance FromJSON MDictsNote where
     parseJSON = genericParseJSON customOptionsLolly
@@ -41,6 +41,5 @@ instance FromJSON MDictsNote where
 getDataByLang :: Int -> IO [MDictNote]
 getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSNOTE") NoReqBody jsonResponse $
-        "transform" =: (1 :: Int) <>
         "filter" =: ("LANGIDFROM,eq," ++ show langid)
-    return $ _fVDICTSNOTE (responseBody v)
+    return $ _frecords (responseBody v)

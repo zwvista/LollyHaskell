@@ -33,7 +33,7 @@ import Models.MDictionary
 import Network.HTTP.Req
 
 type MDictTranslation = MDictionary
-newtype MDictsTranslation = MDictsTranslation{_fVDICTSTRANSLATION :: [MDictTranslation]} deriving (Show, Generic)
+newtype MDictsTranslation = MDictsTranslation{_frecords :: [MDictTranslation]} deriving (Show, Generic)
 
 instance FromJSON MDictsTranslation where
     parseJSON = genericParseJSON customOptionsLolly
@@ -41,6 +41,5 @@ instance FromJSON MDictsTranslation where
 getDataByLang :: Int -> IO [MDictTranslation]
 getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSTRANSLATION") NoReqBody jsonResponse $
-        "transform" =: (1 :: Int) <>
         "filter" =: ("LANGIDFROM,eq," ++ show langid)
-    return $ _fVDICTSTRANSLATION (responseBody v)
+    return $ _frecords (responseBody v)

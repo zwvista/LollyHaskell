@@ -19,4 +19,4 @@ customOptionsLolly :: Options
 customOptionsLolly = aesonDrop 2 id
 
 urlLolly :: Url 'Https
-urlLolly = https "zwvista.tk" /: "lolly" /: "api.php"
+urlLolly = https "zwvista.tk" /: "lolly" /: "api.php" /: "records"

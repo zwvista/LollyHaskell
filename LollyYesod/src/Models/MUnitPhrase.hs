@@ -40,7 +40,7 @@ data MUnitPhrase = MUnitPhrase
     } deriving (Show, Generic, Default)
 makeLenses ''MUnitPhrase
 
-newtype MUnitPhrases = MUnitPhrases{_fVUNITPHRASES :: [MUnitPhrase]} deriving (Show, Generic)
+newtype MUnitPhrases = MUnitPhrases{_frecords :: [MUnitPhrase]} deriving (Show, Generic)
 
 instance ToJSON MUnitPhrase where
     toJSON = genericToJSON customOptionsLolly
@@ -54,12 +54,11 @@ instance FromJSON MUnitPhrases where
 getDataByTextbookUnitPart :: Int -> Int -> Int -> IO [MUnitPhrase]
 getDataByTextbookUnitPart textbookid unitPartFrom unitPartTo = runReq def $ do
     v <- req GET (urlLolly /: "VUNITPHRASES") NoReqBody jsonResponse $
-        "transform" =: (1 :: Int) <>
-        "filter[]" =: (printf "TEXTBOOKID,eq,%d" textbookid :: String) <>
-        "filter[]" =: (printf "UNITPART,bt,%d,%d" unitPartFrom unitPartTo :: String) <>
-        "order[]" =: ("UNITPART" :: String) <>
-        "order[]" =: ("SEQNUM" :: String)
-    return $ _fVUNITPHRASES (responseBody v :: MUnitPhrases)
+        "filter" =: (printf "TEXTBOOKID,eq,%d" textbookid :: String) <>
+        "filter" =: (printf "UNITPART,bt,%d,%d" unitPartFrom unitPartTo :: String) <>
+        "order" =: ("UNITPART" :: String) <>
+        "order" =: ("SEQNUM" :: String)
+    return $ _frecords (responseBody v :: MUnitPhrases)
 
 update :: Int -> MUnitPhrase -> IO (Maybe String)
 update fid item = runReq def $ do

@@ -16,7 +16,7 @@ module Models.MAutoCorrect
 
 import Control.Lens
 import Data.Aeson
-import Data.Default.Class
+import Data.Default
 import Data.Text (Text, replace)
 import GHC.Generics
 import Helpers
@@ -38,7 +38,7 @@ instance ToJSON MAutoCorrect where
 instance FromJSON MAutoCorrect where
     parseJSON = genericParseJSON customOptionsLolly
 
-newtype MAutoCorrects = MAutoCorrects{_fAUTOCORRECT :: [MAutoCorrect]} deriving (Show, Generic)
+newtype MAutoCorrects = MAutoCorrects{_frecords :: [MAutoCorrect]} deriving (Show, Generic)
 
 instance FromJSON MAutoCorrects where
     parseJSON = genericParseJSON customOptionsLolly
@@ -46,9 +46,8 @@ instance FromJSON MAutoCorrects where
 getDataByLang :: Int -> IO [MAutoCorrect]
 getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "AUTOCORRECT") NoReqBody jsonResponse $
-        "transform" =: (1 :: Int) <>
-        "filter" =: ("LANGIDFROM,eq," ++ show langid)
-    return $ _fAUTOCORRECT (responseBody v)
+        "filter" =: ("LANGID,eq," ++ show langid)
+    return $ _frecords (responseBody v)
 
 autoCorrect :: Text -> [MAutoCorrect] -> (MAutoCorrect -> Text) -> (MAutoCorrect -> Text) -> Text
 autoCorrect text arrAutoCorrect colFunc1 colFunc2 =

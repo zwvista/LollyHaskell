@@ -47,7 +47,7 @@ fWORDNOTE w = w ^. fWORD <> case w ^. fNOTE of
     Just "" -> ""
     Just a -> "(" <> a <> ")"
 
-newtype MUnitWords = MUnitWords{_fVUNITWORDS :: [MUnitWord]} deriving (Show, Generic)
+newtype MUnitWords = MUnitWords{_frecords :: [MUnitWord]} deriving (Show, Generic)
 
 instance ToJSON MUnitWord where
     toJSON = genericToJSON customOptionsLolly
@@ -61,12 +61,11 @@ instance FromJSON MUnitWords where
 getDataByTextbookUnitPart :: Int -> Int -> Int -> IO [MUnitWord]
 getDataByTextbookUnitPart textbookid unitPartFrom unitPartTo = runReq def $ do
     v <- req GET (urlLolly /: "VUNITWORDS") NoReqBody jsonResponse $
-        "transform" =: (1 :: Int) <>
-        "filter[]" =: (printf "TEXTBOOKID,eq,%d" textbookid :: String) <>
-        "filter[]" =: (printf "UNITPART,bt,%d,%d" unitPartFrom unitPartTo :: String) <>
-        "order[]" =: ("UNITPART" :: String) <>
-        "order[]" =: ("SEQNUM" :: String)
-    return $ _fVUNITWORDS (responseBody v :: MUnitWords)
+        "filter" =: (printf "TEXTBOOKID,eq,%d" textbookid :: String) <>
+        "filter" =: (printf "UNITPART,bt,%d,%d" unitPartFrom unitPartTo :: String) <>
+        "order" =: ("UNITPART" :: String) <>
+        "order" =: ("SEQNUM" :: String)
+    return $ _frecords (responseBody v :: MUnitWords)
 
 update :: Int -> MUnitWord -> IO (Maybe String)
 update fid item = runReq def $ do

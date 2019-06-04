@@ -31,7 +31,7 @@ data MTextbook = MTextbook
     } deriving (Show, Generic, Default)
 makeLenses ''MTextbook
 
-newtype MTextbooks = MTextbooks{_fTEXTBOOKS :: [MTextbook]} deriving (Show, Generic)
+newtype MTextbooks = MTextbooks{_frecords :: [MTextbook]} deriving (Show, Generic)
 
 customOptions :: Options
 customOptions = aesonDrop 2 $ \case
@@ -50,6 +50,5 @@ instance FromJSON MTextbooks where
 getDataByLang :: Int -> IO [MTextbook]
 getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "TEXTBOOKS") NoReqBody jsonResponse $
-        "transform" =: (1 :: Int) <>
         "filter" =: ("LANGID,eq," ++ show langid)
-    return $ _fTEXTBOOKS (responseBody v :: MTextbooks)
+    return $ _frecords (responseBody v :: MTextbooks)

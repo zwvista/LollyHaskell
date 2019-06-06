@@ -15,7 +15,6 @@ module Models.MDictReference
     , fURL
     , fCHCONV
     , fAUTOMATION
-    , fAUTOJUMP
     , fDICTTABLE
     , fTRANSFORM_WIN
     , fTRANSFORM
@@ -33,13 +32,12 @@ import Models.MDictionary
 import Network.HTTP.Req
 
 type MDictReference = MDictionary
-newtype MDictsWord = MDictsWord{_frecords :: [MDictReference]} deriving (Show, Generic)
+newtype MDictsReference = MDictsWord{records :: [MDictReference]} deriving (Show, Generic)
 
-instance FromJSON MDictsWord where
-    parseJSON = genericParseJSON customOptionsLolly
+instance FromJSON MDictsReference
 
 getDataByLang :: Int -> IO [MDictReference]
 getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSMEAN") NoReqBody jsonResponse $
         "filter" =: ("LANGIDFROM,eq," ++ show langid)
-    return $ _frecords (responseBody v :: MDictsWord)
+    return $ records (responseBody v :: MDictsReference)

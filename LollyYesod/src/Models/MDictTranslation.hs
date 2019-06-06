@@ -15,7 +15,6 @@ module Models.MDictTranslation
     , fURL
     , fCHCONV
     , fAUTOMATION
-    , fAUTOJUMP
     , fDICTTABLE
     , fTRANSFORM_WIN
     , fTRANSFORM
@@ -33,13 +32,12 @@ import Models.MDictionary
 import Network.HTTP.Req
 
 type MDictTranslation = MDictionary
-newtype MDictsTranslation = MDictsTranslation{_frecords :: [MDictTranslation]} deriving (Show, Generic)
+newtype MDictsTranslation = MDictsTranslation{records :: [MDictTranslation]} deriving (Show, Generic)
 
-instance FromJSON MDictsTranslation where
-    parseJSON = genericParseJSON customOptionsLolly
+instance FromJSON MDictsTranslation
 
 getDataByLang :: Int -> IO [MDictTranslation]
 getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSTRANSLATION") NoReqBody jsonResponse $
         "filter" =: ("LANGIDFROM,eq," ++ show langid)
-    return $ _frecords (responseBody v)
+    return $ records (responseBody v)

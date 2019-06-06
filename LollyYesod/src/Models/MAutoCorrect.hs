@@ -38,16 +38,15 @@ instance ToJSON MAutoCorrect where
 instance FromJSON MAutoCorrect where
     parseJSON = genericParseJSON customOptionsLolly
 
-newtype MAutoCorrects = MAutoCorrects{_frecords :: [MAutoCorrect]} deriving (Show, Generic)
+newtype MAutoCorrects = MAutoCorrects{records :: [MAutoCorrect]} deriving (Show, Generic)
 
-instance FromJSON MAutoCorrects where
-    parseJSON = genericParseJSON customOptionsLolly
+instance FromJSON MAutoCorrects
 
 getDataByLang :: Int -> IO [MAutoCorrect]
 getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "AUTOCORRECT") NoReqBody jsonResponse $
         "filter" =: ("LANGID,eq," ++ show langid)
-    return $ _frecords (responseBody v)
+    return $ records (responseBody v)
 
 autoCorrect :: Text -> [MAutoCorrect] -> (MAutoCorrect -> Text) -> (MAutoCorrect -> Text) -> Text
 autoCorrect text arrAutoCorrect colFunc1 colFunc2 =

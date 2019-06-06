@@ -36,13 +36,12 @@ instance ToJSON MVoice where
 instance FromJSON MVoice where
     parseJSON = genericParseJSON customOptionsLolly
 
-newtype MVoices = MVoices{_frecords :: [MVoice]} deriving (Show, Generic)
+newtype MVoices = MVoices{records :: [MVoice]} deriving (Show, Generic)
 
-instance FromJSON MVoices where
-    parseJSON = genericParseJSON customOptionsLolly
+instance FromJSON MVoices
 
 getDataByLang :: Int -> IO [MVoice]
 getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VVOICES") NoReqBody jsonResponse $
         "filter" =: ("LANGID,eq," ++ show langid)
-    return $ _frecords (responseBody v)
+    return $ records (responseBody v)

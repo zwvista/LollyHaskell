@@ -31,7 +31,7 @@ data MLangPhrase = MLangPhrase
     } deriving (Show, Generic, Default)
 makeLenses ''MLangPhrase
 
-newtype MLangPhrases = MLangPhrases{_frecords :: [MLangPhrase]} deriving (Show, Generic)
+newtype MLangPhrases = MLangPhrases{records :: [MLangPhrase]} deriving (Show, Generic)
 
 instance ToJSON MLangPhrase where
     toJSON = genericToJSON customOptionsLolly
@@ -39,14 +39,13 @@ instance ToJSON MLangPhrase where
 instance FromJSON MLangPhrase where
     parseJSON = genericParseJSON customOptionsLolly
 
-instance FromJSON MLangPhrases where
-    parseJSON = genericParseJSON customOptionsLolly
+instance FromJSON MLangPhrases
 
 getDataByLang :: Int -> IO [MLangPhrase]
 getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "LANGPHRASES") NoReqBody jsonResponse $
         "filter" =: ("LANGID,eq," ++ show langid)
-    return $ _frecords (responseBody v :: MLangPhrases)
+    return $ records (responseBody v :: MLangPhrases)
 
 update :: Int -> MLangPhrase -> IO (Maybe String)
 update fid item = runReq def $ do

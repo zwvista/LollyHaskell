@@ -47,7 +47,7 @@ fWORDNOTE w = w ^. fWORD <> case w ^. fNOTE of
     Just "" -> ""
     Just a -> "(" <> a <> ")"
 
-newtype MUnitWords = MUnitWords{_frecords :: [MUnitWord]} deriving (Show, Generic)
+newtype MUnitWords = MUnitWords{records :: [MUnitWord]} deriving (Show, Generic)
 
 instance ToJSON MUnitWord where
     toJSON = genericToJSON customOptionsLolly
@@ -55,8 +55,7 @@ instance ToJSON MUnitWord where
 instance FromJSON MUnitWord where
     parseJSON = genericParseJSON customOptionsLolly
 
-instance FromJSON MUnitWords where
-    parseJSON = genericParseJSON customOptionsLolly
+instance FromJSON MUnitWords
 
 getDataByTextbookUnitPart :: Int -> Int -> Int -> IO [MUnitWord]
 getDataByTextbookUnitPart textbookid unitPartFrom unitPartTo = runReq def $ do
@@ -65,7 +64,7 @@ getDataByTextbookUnitPart textbookid unitPartFrom unitPartTo = runReq def $ do
         "filter" =: (printf "UNITPART,bt,%d,%d" unitPartFrom unitPartTo :: String) <>
         "order" =: ("UNITPART" :: String) <>
         "order" =: ("SEQNUM" :: String)
-    return $ _frecords (responseBody v :: MUnitWords)
+    return $ records (responseBody v :: MUnitWords)
 
 update :: Int -> MUnitWord -> IO (Maybe String)
 update fid item = runReq def $ do

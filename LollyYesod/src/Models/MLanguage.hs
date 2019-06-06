@@ -25,7 +25,7 @@ data MLanguage = MLanguage
     } deriving (Show, Generic, Default)
 makeLenses ''MLanguage
 
-newtype MLanguages = MLanguages{_frecords :: [MLanguage]} deriving (Show, Generic)
+newtype MLanguages = MLanguages{records :: [MLanguage]} deriving (Show, Generic)
 
 customOptions :: Options
 customOptions = aesonDrop 2 $ \case
@@ -38,11 +38,10 @@ instance ToJSON MLanguage where
 instance FromJSON MLanguage where
     parseJSON = genericParseJSON customOptions
 
-instance FromJSON MLanguages where
-    parseJSON = genericParseJSON customOptions
+instance FromJSON MLanguages
 
 getData :: IO [MLanguage]
 getData = runReq def $ do
     v <- req GET (urlLolly /: "LANGUAGES") NoReqBody jsonResponse $
         "filter" =: ("ID,neq,0" :: String)
-    return $ _frecords (responseBody v :: MLanguages)
+    return $ records (responseBody v :: MLanguages)

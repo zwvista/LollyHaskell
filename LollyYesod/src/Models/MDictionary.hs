@@ -17,7 +17,6 @@ module Models.MDictionary
     , fURL
     , fCHCONV
     , fAUTOMATION
-    , fAUTOJUMP
     , fDICTTABLE
     , fTRANSFORM_WIN
     , fTRANSFORM
@@ -46,7 +45,6 @@ data MDictionary = MDictionary
     , _fURL :: Maybe Text
     , _fCHCONV :: Maybe Text
     , _fAUTOMATION :: Maybe Text
-    , _fAUTOJUMP :: Int
     , _fDICTTABLE :: Maybe Text
     , _fTRANSFORM_WIN :: Maybe Text
     , _fTRANSFORM :: Maybe Text

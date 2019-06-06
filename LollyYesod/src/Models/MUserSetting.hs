@@ -46,7 +46,7 @@ data MUserSetting = MUserSetting
     } deriving (Show, Generic, Default)
 makeLenses ''MUserSetting
 
-newtype MUserSettings = MUserSettings{_frecords :: [MUserSetting]} deriving (Show, Generic)
+newtype MUserSettings = MUserSettings{records :: [MUserSetting]} deriving (Show, Generic)
 
 instance ToJSON MUserSetting where
     toJSON = genericToJSON customOptionsLolly
@@ -54,14 +54,13 @@ instance ToJSON MUserSetting where
 instance FromJSON MUserSetting where
     parseJSON = genericParseJSON customOptionsLolly
 
-instance FromJSON MUserSettings where
-    parseJSON = genericParseJSON customOptionsLolly
+instance FromJSON MUserSettings
 
 getDataByUser :: Int -> IO [MUserSetting]
 getDataByUser userid = runReq def $ do
     v <- req GET (urlLolly /: "USERSETTINGS") NoReqBody jsonResponse $
         "filter" =: (printf "USERID,eq,%d" userid :: String)
-    return $ _frecords (responseBody v :: MUserSettings)
+    return $ records (responseBody v :: MUserSettings)
 
 update :: Int -> String -> IO (Maybe String)
 update fid str = runReq def $ do

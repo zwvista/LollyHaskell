@@ -15,7 +15,6 @@ module Models.MDictNote
     , fURL
     , fCHCONV
     , fAUTOMATION
-    , fAUTOJUMP
     , fDICTTABLE
     , fTRANSFORM_WIN
     , fTRANSFORM
@@ -33,13 +32,12 @@ import Models.MDictionary
 import Network.HTTP.Req
 
 type MDictNote = MDictionary
-newtype MDictsNote = MDictsNote{_frecords :: [MDictNote]} deriving (Show, Generic)
+newtype MDictsNote = MDictsNote{records :: [MDictNote]} deriving (Show, Generic)
 
-instance FromJSON MDictsNote where
-    parseJSON = genericParseJSON customOptionsLolly
+instance FromJSON MDictsNote
 
 getDataByLang :: Int -> IO [MDictNote]
 getDataByLang langid = runReq def $ do
     v <- req GET (urlLolly /: "VDICTSNOTE") NoReqBody jsonResponse $
         "filter" =: ("LANGIDFROM,eq," ++ show langid)
-    return $ _frecords (responseBody v)
+    return $ records (responseBody v)

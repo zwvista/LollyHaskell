@@ -40,7 +40,7 @@ data MUnitPhrase = MUnitPhrase
     } deriving (Show, Generic, Default)
 makeLenses ''MUnitPhrase
 
-newtype MUnitPhrases = MUnitPhrases{_frecords :: [MUnitPhrase]} deriving (Show, Generic)
+newtype MUnitPhrases = MUnitPhrases{records :: [MUnitPhrase]} deriving (Show, Generic)
 
 instance ToJSON MUnitPhrase where
     toJSON = genericToJSON customOptionsLolly
@@ -48,8 +48,7 @@ instance ToJSON MUnitPhrase where
 instance FromJSON MUnitPhrase where
     parseJSON = genericParseJSON customOptionsLolly
 
-instance FromJSON MUnitPhrases where
-    parseJSON = genericParseJSON customOptionsLolly
+instance FromJSON MUnitPhrases
 
 getDataByTextbookUnitPart :: Int -> Int -> Int -> IO [MUnitPhrase]
 getDataByTextbookUnitPart textbookid unitPartFrom unitPartTo = runReq def $ do
@@ -58,7 +57,7 @@ getDataByTextbookUnitPart textbookid unitPartFrom unitPartTo = runReq def $ do
         "filter" =: (printf "UNITPART,bt,%d,%d" unitPartFrom unitPartTo :: String) <>
         "order" =: ("UNITPART" :: String) <>
         "order" =: ("SEQNUM" :: String)
-    return $ _frecords (responseBody v :: MUnitPhrases)
+    return $ records (responseBody v :: MUnitPhrases)
 
 update :: Int -> MUnitPhrase -> IO (Maybe String)
 update fid item = runReq def $ do
